@@ -1,31 +1,209 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display:ital@0;1&display=swap');
+@import url('https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin.css');
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:is(.dark *));
 
-@theme {
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", sans-serif;
-  --font-dyslexic: "OpenDyslexic", "Comic Sans MS", cursive;
+:root {
+  --background: #f5f7fa;
+  --foreground: #0f1729;
+  --card: #ffffff;
+  --card-foreground: #0f1729;
+  --popover: #ffffff;
+  --popover-foreground: #0f1729;
+  --primary: #163c83;
+  --primary-foreground: #fafafa;
+  --secondary: #5384c1;
+  --secondary-foreground: #fafafa;
+  --muted: #e7eaef;
+  --muted-foreground: #65758b;
+  --accent: #c3dff8;
+  --accent-foreground: #0f2857;
+  --destructive: #ef3225;
+  --destructive-foreground: #fafafa;
+  --border: #dae0e7;
+  --input: #dae0e7;
+  --ring: #163c83;
+  --chart-1: #91c5ff;
+  --chart-2: #3a81f6;
+  --chart-3: #2563ef;
+  --chart-4: #1a4eda;
+  --chart-5: #1f3fad;
+  --sidebar: #fafafa;
+  --sidebar-foreground: #0a0a0a;
+  --sidebar-primary: #171717;
+  --sidebar-primary-foreground: #fafafa;
+  --sidebar-accent: #f5f5f5;
+  --sidebar-accent-foreground: #171717;
+  --sidebar-border: #e5e5e5;
+  --sidebar-ring: #a1a1a1;
+  --font-sans: DM Sans, ui-sans-serif, sans-serif, system-ui;
+  --font-serif: DM Serif Display, ui-serif, serif;
+  --font-mono: DM Mono, ui-monospace, monospace;
+  --radius: 1.24rem;
+  --shadow-x: 0;
+  --shadow-y: 1px;
+  --shadow-blur: 3px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.1;
+  --shadow-color: oklch(0 0 0);
+  --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+  --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+  --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10);
+  --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10);
+  --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
+  --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+  --tracking-normal: 0.01em;
+  --spacing: 0.25rem;
 
-  --color-primary: #1d1d1f;
-  --color-primary-foreground: #f5f5f7;
-  --color-muted: #86868b;
-  --color-border: rgba(0, 0, 0, 0.08);
-
-  --color-success: rgb(52, 199, 89);
-  --color-success-bg: rgba(52, 199, 89, 0.12);
-  --color-warning: rgb(255, 159, 10);
-  --color-warning-bg: rgba(255, 159, 10, 0.12);
-  --color-info: rgb(0, 122, 255);
-  --color-info-bg: rgba(0, 122, 255, 0.12);
-  --color-destructive: rgb(255, 69, 58);
-  --color-destructive-bg: rgba(255, 69, 58, 0.12);
-
-  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.04);
-  --shadow-glass-md: 0 16px 48px 0 rgba(0, 0, 0, 0.08);
-  --shadow-glass-lg: 0 24px 64px 0 rgba(0, 0, 0, 0.12);
+  /* App-specific status colors */
+  --success: rgb(52, 199, 89);
+  --success-bg: rgba(52, 199, 89, 0.12);
+  --success-border: rgba(52, 199, 89, 0.2);
+  --warning: rgb(255, 159, 10);
+  --warning-bg: rgba(255, 159, 10, 0.12);
+  --warning-border: rgba(255, 159, 10, 0.2);
+  --info: rgb(0, 122, 255);
+  --info-bg: rgba(0, 122, 255, 0.12);
+  --info-border: rgba(0, 122, 255, 0.2);
 }
 
-/* Base reset */
+.dark {
+  --background: #0b111e;
+  --foreground: #edf2f7;
+  --card: #0f1729;
+  --card-foreground: #edf2f7;
+  --popover: #0e1525;
+  --popover-foreground: #edf2f7;
+  --primary: #4785d1;
+  --primary-foreground: #0b111e;
+  --secondary: #1e273e;
+  --secondary-foreground: #b8cce0;
+  --muted: #171f30;
+  --muted-foreground: #7a899f;
+  --accent: #1e273e;
+  --accent-foreground: #a3cdf5;
+  --destructive: #ca2c21;
+  --destructive-foreground: #fafafa;
+  --border: #1e273e;
+  --input: #1e273e;
+  --ring: #4785d1;
+  --chart-1: #91c5ff;
+  --chart-2: #3a81f6;
+  --chart-3: #2563ef;
+  --chart-4: #1a4eda;
+  --chart-5: #1f3fad;
+  --sidebar: #0f1729;
+  --sidebar-foreground: #edf2f7;
+  --sidebar-primary: #4785d1;
+  --sidebar-primary-foreground: #fafafa;
+  --sidebar-accent: #1e273e;
+  --sidebar-accent-foreground: #edf2f7;
+  --sidebar-border: #1e273e;
+  --sidebar-ring: #4785d1;
+  --font-sans: DM Sans, ui-sans-serif, sans-serif, system-ui;
+  --font-serif: DM Serif Display, ui-serif, serif;
+  --font-mono: DM Mono, ui-monospace, monospace;
+  --radius: 1.24rem;
+  --shadow-x: 0;
+  --shadow-y: 1px;
+  --shadow-blur: 3px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.1;
+  --shadow-color: oklch(0 0 0);
+  --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+  --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+  --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10);
+  --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10);
+  --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
+  --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+
+  /* App-specific status colors (slightly more visible in dark) */
+  --success-bg: rgba(52, 199, 89, 0.15);
+  --success-border: rgba(52, 199, 89, 0.25);
+  --warning-bg: rgba(255, 159, 10, 0.15);
+  --warning-border: rgba(255, 159, 10, 0.25);
+  --info-bg: rgba(0, 122, 255, 0.15);
+  --info-border: rgba(0, 122, 255, 0.25);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* App-specific status colors */
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-success-border: var(--success-border);
+  --color-warning: var(--warning);
+  --color-warning-bg: var(--warning-bg);
+  --color-warning-border: var(--warning-border);
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
+  --color-info-border: var(--info-border);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+  --font-dyslexic: "OpenDyslexic", sans-serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --shadow-2xs: var(--shadow-2xs);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow: var(--shadow);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-2xl: var(--shadow-2xl);
+
+  --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
+  --tracking-tight: calc(var(--tracking-normal) - 0.025em);
+  --tracking-normal: var(--tracking-normal);
+  --tracking-wide: calc(var(--tracking-normal) + 0.025em);
+  --tracking-wider: calc(var(--tracking-normal) + 0.05em);
+  --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+}
+
+/* Reset */
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -37,39 +215,13 @@ html {
   font-size: var(--font-base-size, 16px);
 }
 
-body {
-  margin: 0;
-  font-family: var(--font-family, var(--font-sans));
-  background-color: #f5f5f7;
-  color: #1d1d1f;
-  min-height: 100dvh;
-}
-
-.dark body {
-  background-color: #000000;
-  color: #f5f5f7;
-}
-
 #root {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
 
-/* OpenDyslexic font - loaded conditionally */
-@font-face {
-  font-family: 'OpenDyslexic';
-  src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/fonts/OpenDyslexic-Regular.otf') format('opentype');
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'OpenDyslexic';
-  src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/fonts/OpenDyslexic-Bold.otf') format('opentype');
-  font-weight: 700;
-  font-display: swap;
-}
+/* OpenDyslexic font loaded via Fontsource CDN */
 
 /* Font size variants */
 html[data-font-size="sm"] { --font-base-size: 14px; }
@@ -78,93 +230,102 @@ html[data-font-size="lg"] { --font-base-size: 18px; }
 html[data-font-size="xl"] { --font-base-size: 20px; }
 
 /* Dyslexic font toggle */
-html[data-dyslexic="true"] { --font-family: "OpenDyslexic", cursive; }
-
-/* High contrast mode */
-html[data-contrast="high"] {
-  --color-border: rgba(0, 0, 0, 0.3);
-}
-html.dark[data-contrast="high"] {
-  --color-border: rgba(255, 255, 255, 0.3);
+html[data-dyslexic="true"] {
+  --font-family: "OpenDyslexic", sans-serif;
+  --font-sans: "OpenDyslexic", sans-serif;
+  --font-serif: "OpenDyslexic", sans-serif;
+  --font-mono: "OpenDyslexic", sans-serif;
 }
 
-/* Background gradients */
-.bg-app-light {
-  background: radial-gradient(ellipse at 20% 20%, #f0f4ff 0%, transparent 60%),
-              radial-gradient(ellipse at 80% 80%, #f5f0ff 0%, transparent 60%),
-              linear-gradient(135deg, #f5f5f7 0%, #e8eced 50%, #f5f5f7 100%);
-}
+/* High contrast */
+html[data-contrast="high"] { --border: rgba(0, 0, 0, 0.3); }
+html.dark[data-contrast="high"] { --border: rgba(255, 255, 255, 0.3); }
 
-.bg-app-dark {
-  background: radial-gradient(ellipse at 20% 20%, #0d1117 0%, transparent 60%),
-              radial-gradient(ellipse at 80% 80%, #0a0a0c 0%, transparent 60%),
-              linear-gradient(135deg, #000000 0%, #0d1117 50%, #0a0a0c 100%);
-}
-
-/* Glass effect utilities */
-@utility glass-light {
-  background-color: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.04);
-}
-
-@utility glass-dark {
-  background-color: rgba(10, 10, 12, 0.4);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.04);
-}
-
-@utility glass-sidebar-light {
-  background-color: rgba(255, 255, 255, 0.1);
+/* Glass utilities — single variants; CSS vars handle light/dark automatically */
+@utility glass-sidebar {
+  background-color: color-mix(in srgb, var(--sidebar) 88%, transparent);
   backdrop-filter: blur(32px);
   -webkit-backdrop-filter: blur(32px);
-  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--sidebar-border);
+}
+
+/* Keep legacy names used in existing components */
+@utility glass-sidebar-light {
+  background-color: color-mix(in srgb, var(--sidebar) 88%, transparent);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border-right: 1px solid var(--sidebar-border);
 }
 
 @utility glass-sidebar-dark {
-  background-color: rgba(0, 0, 0, 0.15);
+  background-color: color-mix(in srgb, var(--sidebar) 88%, transparent);
   backdrop-filter: blur(32px);
   -webkit-backdrop-filter: blur(32px);
-  border-right: 1px solid rgba(255, 255, 255, 0.04);
+  border-right: 1px solid var(--sidebar-border);
+}
+
+@utility glass-topbar {
+  background-color: color-mix(in srgb, var(--background) 80%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
 }
 
 @utility glass-topbar-light {
-  background-color: rgba(245, 245, 247, 0.7);
+  background-color: color-mix(in srgb, var(--background) 80%, transparent);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid var(--border);
 }
 
 @utility glass-topbar-dark {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: color-mix(in srgb, var(--background) 80%, transparent);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--border);
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+@utility glass-light {
+  background-color: color-mix(in srgb, var(--card) 40%, transparent);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 }
-::-webkit-scrollbar-track {
-  background: transparent;
+
+@utility glass-dark {
+  background-color: color-mix(in srgb, var(--card) 40%, transparent);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: rgba(134, 134, 139, 0.3);
+  background: color-mix(in srgb, var(--muted-foreground) 30%, transparent);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(134, 134, 139, 0.5);
+  background: color-mix(in srgb, var(--muted-foreground) 50%, transparent);
 }
 
 /* Focus ring */
 :focus-visible {
-  outline: 2px solid rgb(0, 122, 255);
+  outline: 2px solid var(--ring);
   outline-offset: 2px;
   border-radius: 6px;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-family, var(--font-sans));
+    letter-spacing: var(--tracking-normal);
+  }
 }

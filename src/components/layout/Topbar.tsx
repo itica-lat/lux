@@ -33,7 +33,7 @@ export function Topbar() {
   };
 
   return (
-    <header className="h-14 flex items-center justify-between px-6 glass-topbar-light dark:glass-topbar-dark">
+    <header className="sticky h-14 m-5 flex items-center top-4 justify-between px-6 glass-topbar rounded-full">
       <div />
       <div className="flex items-center gap-3">
         <FontSizeControl />
@@ -41,15 +41,15 @@ export function Topbar() {
         {user && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-2.5 rounded-xl px-2 py-1 hover:bg-black/5 dark:hover:bg-white/8 transition-colors cursor-pointer">
+              <button className="flex items-center gap-2.5 rounded-xl px-2 py-1 hover:bg-muted transition-colors cursor-pointer">
                 <Avatar className="h-7 w-7">
                   <AvatarFallback className="text-xs">{initials(user.name)}</AvatarFallback>
                 </Avatar>
                 <div className="hidden sm:flex flex-col items-start">
-                  <span className="text-xs font-medium text-[#1d1d1f] dark:text-white leading-none">
+                  <span className="text-xs font-medium text-foreground leading-none">
                     {user.name.split(' ')[0]}
                   </span>
-                  <span className="text-[10px] text-[#86868b] leading-none mt-0.5">
+                  <span className="text-[10px] text-muted-foreground leading-none mt-0.5">
                     {ROLE_LABELS[user.role]}
                   </span>
                 </div>
@@ -58,8 +58,8 @@ export function Topbar() {
             <DropdownMenuContent align="end" className="w-52">
               <DropdownMenuLabel>
                 <div className="flex flex-col">
-                  <span className="font-semibold text-[#1d1d1f] dark:text-white text-xs normal-case tracking-normal">{user.name}</span>
-                  <span className="font-normal text-[#86868b]">{user.email}</span>
+                  <span className="font-semibold text-foreground text-xs normal-case tracking-normal">{user.name}</span>
+                  <span className="font-normal text-muted-foreground">{user.email}</span>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
@@ -80,7 +80,7 @@ export function Topbar() {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={handleLogout}
-                className="text-[rgb(255,69,58)] hover:text-[rgb(255,69,58)] focus:text-[rgb(255,69,58)]"
+                className="text-destructive hover:text-destructive focus:text-destructive"
               >
                 <LogOut className="h-4 w-4" />
                 Cerrar sesión

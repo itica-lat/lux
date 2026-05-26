@@ -21,8 +21,8 @@ const COMPONENT_QUERY = `
 function DetailRow({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-0.5">
-      <span className="text-xs text-[#86868b] uppercase tracking-widest font-medium">{label}</span>
-      <span className="text-sm text-[#1d1d1f] dark:text-white">{value ?? '—'}</span>
+      <span className="text-xs text-muted-foreground uppercase tracking-widest font-medium">{label}</span>
+      <span className="text-sm text-foreground">{value ?? '—'}</span>
     </div>
   );
 }
@@ -46,7 +46,7 @@ export function ComponentDetail() {
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
-        <h1 className="text-xl font-semibold tracking-tight text-[#1d1d1f] dark:text-white flex-1">
+        <h1 className="text-xl font-semibold tracking-tight text-foreground flex-1">
           {isLoading ? '...' : (component ? `${component.name} — ${component.model}` : 'Componente no encontrado')}
         </h1>
         {canEdit && component && (
@@ -58,7 +58,7 @@ export function ComponentDetail() {
       </div>
 
       {error && (
-        <div className="rounded-xl bg-[rgba(255,69,58,0.08)] border border-[rgba(255,69,58,0.2)] p-4 text-sm text-[rgb(255,69,58)]">
+        <div className="rounded-xl bg-destructive/10 border border-destructive/20 p-4 text-sm text-destructive">
           Error: {error}
         </div>
       )}

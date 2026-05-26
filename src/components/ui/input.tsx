@@ -7,12 +7,11 @@ const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>
       <input
         type={type}
         className={cn(
-          'flex h-10 w-full rounded-xl border border-black/10 bg-white/50 px-3 py-2 text-sm text-[#1d1d1f] placeholder:text-[#86868b]',
-          'transition-all duration-200',
-          'focus:outline-none focus:border-[rgb(0,122,255)] focus:bg-white/70 focus:ring-4 focus:ring-[rgba(0,122,255,0.08)]',
-          'disabled:cursor-not-allowed disabled:opacity-50',
-          'dark:border-white/10 dark:bg-black/20 dark:text-white dark:placeholder:text-[#86868b]',
-          'dark:focus:border-[rgb(0,122,255)] dark:focus:bg-black/30 dark:focus:ring-[rgba(0,122,255,0.12)]',
+          'flex h-10 w-full rounded-xl border border-border/80 bg-card/45 px-3.5 py-2 text-sm text-foreground placeholder:text-muted-foreground/75 shadow-2xs backdrop-blur-xs',
+          'transition-all duration-300 ease-out',
+          'hover:border-border hover:bg-card/65',
+          'focus:outline-none focus:border-primary focus:bg-card/85 focus:ring-4 focus:ring-primary/10 focus:shadow-xs',
+          'disabled:cursor-not-allowed disabled:opacity-40 disabled:bg-muted/30',
           className
         )}
         ref={ref}

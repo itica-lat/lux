@@ -24,8 +24,8 @@ const PRODUCT_QUERY = `
 function DetailRow({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-0.5">
-      <span className="text-xs text-[#86868b] uppercase tracking-widest font-medium">{label}</span>
-      <span className="text-sm text-[#1d1d1f] dark:text-white">{value ?? '—'}</span>
+      <span className="text-xs text-muted-foreground uppercase tracking-widest font-medium">{label}</span>
+      <span className="text-sm text-foreground">{value ?? '—'}</span>
     </div>
   );
 }
@@ -51,9 +51,9 @@ export function ProductDetail() {
         </Button>
         <div className="flex-1">
           {isLoading ? (
-            <div className="h-6 w-48 bg-black/8 dark:bg-white/8 rounded animate-pulse" />
+            <div className="h-6 w-48 bg-muted rounded animate-pulse" />
           ) : (
-            <h1 className="text-xl font-semibold tracking-tight text-[#1d1d1f] dark:text-white">
+            <h1 className="text-xl font-semibold tracking-tight text-foreground">
               {product ? `${product.brand} ${product.model}` : 'Equipo no encontrado'}
             </h1>
           )}
@@ -75,7 +75,7 @@ export function ProductDetail() {
       </div>
 
       {error && (
-        <div className="rounded-xl bg-[rgba(255,69,58,0.08)] border border-[rgba(255,69,58,0.2)] p-4 text-sm text-[rgb(255,69,58)]">
+        <div className="rounded-xl bg-destructive/10 border border-destructive/20 p-4 text-sm text-destructive">
           Error: {error}
         </div>
       )}
@@ -87,8 +87,8 @@ export function ProductDetail() {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div key={i} className="space-y-1.5">
-                    <div className="h-3 w-16 bg-black/8 rounded animate-pulse" />
-                    <div className="h-4 w-24 bg-black/8 rounded animate-pulse" />
+                    <div className="h-3 w-16 bg-muted rounded animate-pulse" />
+                    <div className="h-4 w-24 bg-muted rounded animate-pulse" />
                   </div>
                 ))}
               </div>
@@ -126,7 +126,7 @@ export function ProductDetail() {
                   <div className="col-span-full">
                     <DetailRow
                       label="Fallas / Observaciones"
-                      value={<span className="text-[rgb(255,159,10)]">{product.issues}</span>}
+                      value={<span className="text-warning">{product.issues}</span>}
                     />
                   </div>
                 )}
@@ -140,24 +140,24 @@ export function ProductDetail() {
             </CardHeader>
             <CardContent>
               {product.components.length === 0 ? (
-                <p className="text-sm text-[#86868b]">Sin componentes registrados</p>
+                <p className="text-sm text-muted-foreground">Sin componentes registrados</p>
               ) : (
-                <div className="rounded-xl border border-black/8 dark:border-white/5 overflow-hidden">
+                <div className="rounded-xl border border-border overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="border-b border-black/8 dark:border-white/5">
+                      <tr className="border-b border-border">
                         {['Componente', 'Modelo', 'Fabricante', 'Serie', 'De fábrica', 'Funciona'].map(h => (
-                          <th key={h} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-widest text-[#86868b]">{h}</th>
+                          <th key={h} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-widest text-muted-foreground">{h}</th>
                         ))}
                       </tr>
                     </thead>
                     <tbody>
                       {product.components.map(c => (
-                        <tr key={c.id} className="border-b border-black/5 dark:border-white/4 last:border-0 hover:bg-black/2 transition-colors">
-                          <td className="px-4 py-3 text-sm font-medium text-[#1d1d1f] dark:text-white">{c.name}</td>
-                          <td className="px-4 py-3 text-sm text-[#86868b]">{c.model}</td>
-                          <td className="px-4 py-3 text-sm text-[#86868b]">{c.manufacturer}</td>
-                          <td className="px-4 py-3 text-xs text-[#86868b] font-mono">{c.serialNumber}</td>
+                        <tr key={c.id} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
+                          <td className="px-4 py-3 text-sm font-medium text-foreground">{c.name}</td>
+                          <td className="px-4 py-3 text-sm text-muted-foreground">{c.model}</td>
+                          <td className="px-4 py-3 text-sm text-muted-foreground">{c.manufacturer}</td>
+                          <td className="px-4 py-3 text-xs text-muted-foreground font-mono">{c.serialNumber}</td>
                           <td className="px-4 py-3"><Badge color={c.isFactory ? 'success' : 'muted'}>{c.isFactory ? 'Sí' : 'No'}</Badge></td>
                           <td className="px-4 py-3"><Badge color={c.isWorking ? 'success' : 'destructive'}>{c.isWorking ? 'Sí' : 'No'}</Badge></td>
                         </tr>
@@ -170,7 +170,7 @@ export function ProductDetail() {
           </Card>
         </motion.div>
       ) : !isLoading && (
-        <div className="text-center py-16 text-[#86868b]">Equipo no encontrado</div>
+        <div className="text-center py-16 text-muted-foreground">Equipo no encontrado</div>
       )}
     </div>
   );

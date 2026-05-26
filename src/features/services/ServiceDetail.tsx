@@ -15,161 +15,158 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const SERVICE_QUERY = `
-  query GetServiceRequest($id: ID!) {
-    serviceRequest(id: $id) {
-      id type status description labNumber softwareName equipmentId resolutionText
-      requestedBy { id name email }
-      createdAt updatedAt
-    }
-  }
+ query GetServiceRequest($id: ID!) {
+ serviceRequest(id: $id) {
+ id type status description labNumber softwareName equipmentId resolutionText
+ requestedBy { id name email }
+ createdAt updatedAt
+ }
+ }
 `;
 
 const UPDATE_SERVICE_MUTATION = `
-  mutation UpdateServiceRequest($id: ID!, $input: ServiceRequestUpdateInput!) {
-    updateServiceRequest(id: $id, input: $input) { id status }
-  }
+ mutation UpdateServiceRequest($id: ID!, $input: ServiceRequestUpdateInput!) {
+ updateServiceRequest(id: $id, input: $input) { id status }
+ }
 `;
 
 export function ServiceDetail() {
-  const { id } = useParams<{ id: string }>();
-  const { hasRole } = useAuth();
-  const [saving, setSaving] = useState(false);
-  const [newStatus, setNewStatus] = useState<ServiceStatus | ''>('');
-  const [resolution, setResolution] = useState('');
+ const { id } = useParams<{ id: string }>();
+ const { hasRole } = useAuth();
+ const [saving, setSaving] = useState(false);
+ const [newStatus, setNewStatus] = useState<ServiceStatus | ''>('');
+ const [resolution, setResolution] = useState('');
 
-  const { data, isLoading, error, refetch } = useAsync<{ serviceRequest: ServiceRequest | null }>(
-    () => gql(SERVICE_QUERY, { id }),
-    [id]
-  );
+ const { data, isLoading, error, refetch } = useAsync<{ serviceRequest: ServiceRequest | null }>(
+ () => gql(SERVICE_QUERY, { id }),
+ [id]
+ );
 
-  const service = data?.serviceRequest;
-  const canManage = hasRole('root_admin', 'admin', 'tecnico');
+ const service = data?.serviceRequest;
+ const canManage = hasRole('root_admin', 'admin', 'tecnico');
 
-  const handleUpdate = async () => {
-    if (!id || !newStatus) return;
-    setSaving(true);
-    try {
-      await gql(UPDATE_SERVICE_MUTATION, {
-        id,
-        input: {
-          status: newStatus,
-          resolutionText: newStatus === 'completed' || newStatus === 'rejected' ? resolution : undefined,
-        },
-      });
-      refetch();
-      setNewStatus('');
-      setResolution('');
-    } finally {
-      setSaving(false);
-    }
-  };
+ const handleUpdate = async () => {
+ if (!id || !newStatus) return;
+ setSaving(true);
+ try {
+ await gql(UPDATE_SERVICE_MUTATION, {
+ id,
+ input: {
+ status: newStatus,
+ resolutionText: newStatus === 'completed' || newStatus === 'rejected' ? resolution : undefined,
+ },
+ });
+ refetch();
+ setNewStatus('');
+ setResolution('');
+ } finally {
+ setSaving(false);
+ }
+ };
 
-  return (
-    <div className="space-y-6 max-w-2xl">
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" asChild>
-          <Link to={ROUTES.SERVICES}><ArrowLeft className="h-4 w-4" /></Link>
-        </Button>
-        <h1 className="text-xl font-semibold tracking-tight text-[#1d1d1f] dark:text-white flex-1">
-          Solicitud de servicio
-        </h1>
-      </div>
+ return (
+ <div className="space-y-6 max-w-2xl">
+ <div className="flex items-center gap-3">
+ <Button variant="ghost" size="icon" asChild>
+ <Link to={ROUTES.SERVICES}><ArrowLeft className="h-4 w-4" /></Link>
+ </Button>
+ <h1 className="text-xl font-semibold tracking-tight text-foreground flex-1">
+ Solicitud de servicio
+ </h1>
+ </div>
 
-      {error && (
-        <div className="rounded-xl bg-[rgba(255,69,58,0.08)] border border-[rgba(255,69,58,0.2)] p-4 text-sm text-[rgb(255,69,58)]">
-          Error: {error}
-        </div>
-      )}
+ {error && (
+ <div className="rounded-xl bg-destructive/10 border border-destructive/20 p-4 text-sm text-destructive">
+ Error: {error}
+ </div>
+ )}
 
-      {!isLoading && service && (
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className="space-y-4"
-        >
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>{SERVICE_TYPE_LABELS[service.type]}</CardTitle>
-                <Badge color={SERVICE_STATUS_CONFIG[service.status].color}>
-                  {SERVICE_STATUS_CONFIG[service.status].label}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <p className="text-xs text-[#86868b] uppercase tracking-widest mb-0.5">Solicitante</p>
-                  <p className="text-[#1d1d1f] dark:text-white">{service.requestedBy.name}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-[#86868b] uppercase tracking-widest mb-0.5">Fecha</p>
-                  <p className="text-[#1d1d1f] dark:text-white">{formatDate(service.createdAt)}</p>
-                </div>
-                {service.labNumber && (
-                  <div>
-                    <p className="text-xs text-[#86868b] uppercase tracking-widest mb-0.5">Laboratorio</p>
-                    <p className="text-[#1d1d1f] dark:text-white">N° {service.labNumber}</p>
-                  </div>
-                )}
-                {service.softwareName && (
-                  <div>
-                    <p className="text-xs text-[#86868b] uppercase tracking-widest mb-0.5">Software</p>
-                    <p className="text-[#1d1d1f] dark:text-white">{service.softwareName}</p>
-                  </div>
-                )}
-              </div>
-              <div>
-                <p className="text-xs text-[#86868b] uppercase tracking-widest mb-1.5">Descripción</p>
-                <p className="text-sm text-[#1d1d1f] dark:text-white leading-relaxed">{service.description}</p>
-              </div>
-              {service.resolutionText && (
-                <div>
-                  <p className="text-xs text-[#86868b] uppercase tracking-widest mb-1.5">Resolución</p>
-                  <p className="text-sm text-[#1d1d1f] dark:text-white leading-relaxed">{service.resolutionText}</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+ {!isLoading && service && (
+ <motion.div
+ initial={{ opacity: 0, y: 12 }}
+ animate={{ opacity: 1, y: 0 }}
+ transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+ className="space-y-4" >
+ <Card>
+ <CardHeader>
+ <div className="flex items-center justify-between">
+ <CardTitle>{SERVICE_TYPE_LABELS[service.type]}</CardTitle>
+ <Badge color={SERVICE_STATUS_CONFIG[service.status].color}>
+ {SERVICE_STATUS_CONFIG[service.status].label}
+ </Badge>
+ </div>
+ </CardHeader>
+ <CardContent className="space-y-4">
+ <div className="grid grid-cols-2 gap-4 text-sm">
+ <div>
+ <p className="text-xs text-muted-foreground uppercase tracking-widest mb-0.5">Solicitante</p>
+ <p className="text-foreground">{service.requestedBy.name}</p>
+ </div>
+ <div>
+ <p className="text-xs text-muted-foreground uppercase tracking-widest mb-0.5">Fecha</p>
+ <p className="text-foreground">{formatDate(service.createdAt)}</p>
+ </div>
+ {service.labNumber && (
+ <div>
+ <p className="text-xs text-muted-foreground uppercase tracking-widest mb-0.5">Laboratorio</p>
+ <p className="text-foreground">N° {service.labNumber}</p>
+ </div>
+ )}
+ {service.softwareName && (
+ <div>
+ <p className="text-xs text-muted-foreground uppercase tracking-widest mb-0.5">Software</p>
+ <p className="text-foreground">{service.softwareName}</p>
+ </div>
+ )}
+ </div>
+ <div>
+ <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1.5">Descripción</p>
+ <p className="text-sm text-foreground leading-relaxed">{service.description}</p>
+ </div>
+ {service.resolutionText && (
+ <div>
+ <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1.5">Resolución</p>
+ <p className="text-sm text-foreground leading-relaxed">{service.resolutionText}</p>
+ </div>
+ )}
+ </CardContent>
+ </Card>
 
-          {canManage && !['completed', 'rejected'].includes(service.status) && (
-            <Card>
-              <CardHeader><CardTitle>Actualizar estado</CardTitle></CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-1.5">
-                  <Label>Nuevo estado</Label>
-                  <Select value={newStatus} onValueChange={v => setNewStatus(v as ServiceStatus)}>
-                    <SelectTrigger><SelectValue placeholder="Seleccionar estado..." /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="approved">Aprobado</SelectItem>
-                      <SelectItem value="in_progress">En progreso</SelectItem>
-                      <SelectItem value="completed">Completado</SelectItem>
-                      <SelectItem value="rejected">Rechazado</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                {(newStatus === 'completed' || newStatus === 'rejected') && (
-                  <div className="space-y-1.5">
-                    <Label>Texto de resolución</Label>
-                    <Textarea
-                      value={resolution}
-                      onChange={e => setResolution(e.target.value)}
-                      placeholder="Describí la resolución o motivo de rechazo..."
-                      className="h-24"
-                    />
-                  </div>
-                )}
-                <div className="flex justify-end">
-                  <Button size="sm" onClick={handleUpdate} disabled={saving || !newStatus}>
-                    {saving ? 'Guardando...' : 'Actualizar'}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-        </motion.div>
-      )}
-    </div>
-  );
+ {canManage && !['completed', 'rejected'].includes(service.status) && (
+ <Card>
+ <CardHeader><CardTitle>Actualizar estado</CardTitle></CardHeader>
+ <CardContent className="space-y-4">
+ <div className="space-y-1.5">
+ <Label>Nuevo estado</Label>
+ <Select value={newStatus} onValueChange={v => setNewStatus(v as ServiceStatus)}>
+ <SelectTrigger><SelectValue placeholder="Seleccionar estado..." /></SelectTrigger>
+ <SelectContent>
+ <SelectItem value="approved">Aprobado</SelectItem>
+ <SelectItem value="in_progress">En progreso</SelectItem>
+ <SelectItem value="completed">Completado</SelectItem>
+ <SelectItem value="rejected">Rechazado</SelectItem>
+ </SelectContent>
+ </Select>
+ </div>
+ {(newStatus === 'completed' || newStatus === 'rejected') && (
+ <div className="space-y-1.5">
+ <Label>Texto de resolución</Label>
+ <Textarea
+ value={resolution}
+ onChange={e => setResolution(e.target.value)}
+ placeholder="Describí la resolución o motivo de rechazo..." className="h-24" />
+ </div>
+ )}
+ <div className="flex justify-end">
+ <Button size="sm" onClick={handleUpdate} disabled={saving || !newStatus}>
+ {saving ? 'Guardando...' : 'Actualizar'}
+ </Button>
+ </div>
+ </CardContent>
+ </Card>
+ )}
+ </motion.div>
+ )}
+ </div>
+ );
 }

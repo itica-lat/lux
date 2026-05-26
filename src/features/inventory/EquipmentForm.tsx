@@ -92,7 +92,7 @@ export function EquipmentForm({ mode }: EquipmentFormProps) {
         <Button variant="ghost" size="icon" asChild>
           <Link to={ROUTES.INVENTORY}><ArrowLeft className="h-4 w-4" /></Link>
         </Button>
-        <h1 className="text-xl font-semibold tracking-tight text-[#1d1d1f] dark:text-white">
+        <h1 className="text-xl font-semibold tracking-tight text-foreground">
           {mode === 'product' ? 'Nuevo equipo' : 'Nuevo componente'}
         </h1>
       </div>
@@ -112,7 +112,7 @@ export function EquipmentForm({ mode }: EquipmentFormProps) {
                       id="kind"
                       value={form.kind}
                       onChange={e => update('kind', e.target.value)}
-                      className="flex h-10 w-full rounded-xl border border-black/10 bg-white/50 px-3 text-sm focus:outline-none focus:border-[rgb(0,122,255)] dark:border-white/10 dark:bg-black/20 dark:text-white"
+                      className="flex h-10 w-full rounded-xl border border-input bg-card/50 px-3 text-sm text-foreground focus:outline-none focus:border-ring"
                     >
                       {EQUIPMENT_KINDS.map(k => <option key={k} value={k}>{k}</option>)}
                     </select>
@@ -123,7 +123,7 @@ export function EquipmentForm({ mode }: EquipmentFormProps) {
                       id="location"
                       value={form.location}
                       onChange={e => update('location', e.target.value)}
-                      className="flex h-10 w-full rounded-xl border border-black/10 bg-white/50 px-3 text-sm focus:outline-none focus:border-[rgb(0,122,255)] dark:border-white/10 dark:bg-black/20 dark:text-white"
+                      className="flex h-10 w-full rounded-xl border border-input bg-card/50 px-3 text-sm text-foreground focus:outline-none focus:border-ring"
                     >
                       {LOCATIONS.map(l => <option key={l} value={l}>{l}</option>)}
                     </select>
@@ -183,18 +183,18 @@ export function EquipmentForm({ mode }: EquipmentFormProps) {
                 <div className="grid grid-cols-2 gap-4">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="checkbox" checked={form.isFactory} onChange={e => update('isFactory', e.target.checked)} className="h-4 w-4 rounded" />
-                    <span className="text-sm text-[#1d1d1f] dark:text-white">¿Es de fábrica?</span>
+                    <span className="text-sm text-foreground">¿Es de fábrica?</span>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="checkbox" checked={form.isWorking} onChange={e => update('isWorking', e.target.checked)} className="h-4 w-4 rounded" />
-                    <span className="text-sm text-[#1d1d1f] dark:text-white">¿Está funcionando?</span>
+                    <span className="text-sm text-foreground">¿Está funcionando?</span>
                   </label>
                 </div>
               </>
             )}
 
             {error && (
-              <div className="rounded-xl bg-[rgba(255,69,58,0.08)] border border-[rgba(255,69,58,0.2)] p-3 text-sm text-[rgb(255,69,58)]">
+              <div className="rounded-xl bg-destructive/10 border border-destructive/20 p-3 text-sm text-destructive">
                 {error}
               </div>
             )}

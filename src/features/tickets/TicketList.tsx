@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'motion/react';
 import { Plus, Search, AlertCircle } from 'lucide-react';
 import { useAsync } from '@/hooks/useSkeleton';
 import { useAuth } from '@/hooks/useAuth';
-import { gql, formatDate, truncate } from '@/lib/utils';
-import { TICKET_STATUS_CONFIG, TICKET_CATEGORY_LABELS, ROUTES, SPRING_TRANSITION } from '@/lib/constants';
+import { gql, formatDate, truncate, cn } from '@/lib/utils';
+import { TICKET_STATUS_CONFIG, TICKET_CATEGORY_LABELS, ROUTES } from '@/lib/constants';
 import type { Ticket, TicketStatus } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -74,12 +73,15 @@ export function TicketList() {
     }
   };
 
+  // Skeletons are shown ONLY on first mount (when we don't have list data yet)
+  const showSkeleton = isLoading && !data;
+
   return (
     <div className="space-y-6 max-w-6xl">
       <div className="flex items-end justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-[-0.02em] text-[#1d1d1f] dark:text-white">Tickets</h1>
-          <p className="text-sm text-[#86868b] mt-0.5">Mesa de ayuda</p>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Tickets</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Mesa de ayuda</p>
         </div>
         <div className="flex gap-2">
           {!hasRole('root_admin', 'admin', 'tecnico') && (
@@ -101,13 +103,13 @@ export function TicketList() {
 
       <div className="flex gap-3 flex-wrap">
         <div className="relative flex-1 min-w-[200px] max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#86868b]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Buscar tickets..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
         </div>
         <select
           value={statusFilter}
           onChange={e => setStatusFilter(e.target.value as TicketStatus | '')}
-          className="h-10 rounded-xl border border-black/10 bg-white/50 px-3 text-sm text-[#1d1d1f] focus:outline-none focus:border-[rgb(0,122,255)] dark:border-white/10 dark:bg-black/20 dark:text-white cursor-pointer"
+          className="h-10 rounded-xl border border-input bg-card/50 px-3 text-sm text-foreground focus:outline-none focus:border-ring cursor-pointer"
         >
           <option value="">Todos los estados</option>
           <option value="pending">Pendiente</option>
@@ -118,54 +120,54 @@ export function TicketList() {
       </div>
 
       {error && (
-        <div className="rounded-xl bg-[rgba(255,69,58,0.08)] border border-[rgba(255,69,58,0.2)] p-4 text-sm text-[rgb(255,69,58)]">
+        <div className="rounded-xl bg-destructive/10 border border-destructive/20 p-4 text-sm text-destructive">
           Error: {error}
         </div>
       )}
 
-      {isLoading ? (
+      {showSkeleton ? (
         <TableSkeleton rows={8} cols={5} />
       ) : tickets.length === 0 ? (
-        <div className="text-center py-16 text-[#86868b] text-sm">No hay tickets</div>
+        <div className="text-center py-16 text-muted-foreground text-sm">No hay tickets</div>
       ) : (
-        <div className="rounded-2xl border border-black/8 dark:border-white/5 overflow-hidden bg-white/20 dark:bg-white/2 backdrop-blur-sm">
+        <div className={cn(
+          "rounded-2xl border border-border/70 overflow-x-auto bg-card/20 backdrop-blur-sm transition-all duration-300 ease-out",
+          isLoading && "opacity-75 blur-xs pointer-events-none"
+        )}>
           <table className="w-full">
             <thead>
-              <tr className="border-b border-black/8 dark:border-white/5">
+              <tr className="border-b border-border">
                 {['ID', 'Título', 'Estado', 'Categoría', 'Asignado a', 'Solicitante', 'Fecha'].map(h => (
-                  <th key={h} className="px-6 py-3 text-left text-xs font-medium uppercase tracking-widest text-[#86868b]">{h}</th>
+                  <th key={h} className="px-6 py-3 text-left text-xs font-medium uppercase tracking-widest text-muted-foreground">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {tickets.map((t, i) => {
+              {tickets.map((t) => {
                 const statusConf = TICKET_STATUS_CONFIG[t.status];
                 return (
-                  <motion.tr
+                  <tr
                     key={t.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ ...SPRING_TRANSITION, delay: i * 0.02 }}
-                    className="border-b border-black/5 dark:border-white/4 last:border-0 hover:bg-white/20 dark:hover:bg-white/5 transition-colors"
+                    className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors"
                   >
-                    <td className="px-6 py-4 text-xs text-[#86868b] font-mono">{t.id}</td>
+                    <td className="px-6 py-4 text-xs text-muted-foreground font-mono">{t.id}</td>
                     <td className="px-6 py-4">
                       {hasRole('root_admin', 'admin', 'tecnico') ? (
-                        <Link to={`${ROUTES.TICKETS}/${t.id}`} className="text-sm font-medium text-[#1d1d1f] dark:text-white hover:underline">
+                        <Link to={`${ROUTES.TICKETS}/${t.id}`} className="text-sm font-semibold text-foreground hover:underline">
                           {truncate(t.title, 48)}
                         </Link>
                       ) : (
-                        <span className="text-sm text-[#1d1d1f] dark:text-white">{truncate(t.title, 48)}</span>
+                        <span className="text-sm text-foreground font-semibold">{truncate(t.title, 48)}</span>
                       )}
                     </td>
                     <td className="px-6 py-4">
-                      <Badge color={statusConf.color}>{statusConf.label}</Badge>
+                      <Badge color={statusConf.color} withDot>{statusConf.label}</Badge>
                     </td>
-                    <td className="px-6 py-4 text-sm text-[#86868b]">{TICKET_CATEGORY_LABELS[t.category]}</td>
-                    <td className="px-6 py-4 text-sm text-[#86868b]">{t.assignedTo?.name ?? '—'}</td>
-                    <td className="px-6 py-4 text-sm text-[#86868b]">{t.submittedBy.name}</td>
-                    <td className="px-6 py-4 text-xs text-[#86868b]">{formatDate(t.createdAt)}</td>
-                  </motion.tr>
+                    <td className="px-6 py-4 text-sm text-muted-foreground font-medium">{TICKET_CATEGORY_LABELS[t.category]}</td>
+                    <td className="px-6 py-4 text-sm text-muted-foreground font-medium">{t.assignedTo?.name ?? '—'}</td>
+                    <td className="px-6 py-4 text-sm text-muted-foreground font-medium">{t.submittedBy.name}</td>
+                    <td className="px-6 py-4 text-xs text-muted-foreground">{formatDate(t.createdAt)}</td>
+                  </tr>
                 );
               })}
             </tbody>

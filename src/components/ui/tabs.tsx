@@ -11,7 +11,7 @@ function TabsList({
   return (
     <TabsPrimitive.List
       className={cn(
-        'inline-flex items-center gap-1 rounded-xl bg-black/5 p-1 dark:bg-white/8',
+        'inline-flex items-center gap-1 rounded-2xl bg-muted/50 p-1.5 border border-border/30 backdrop-blur-md shadow-2xs',
         className
       )}
       {...props}
@@ -26,12 +26,12 @@ function TabsTrigger({
   return (
     <TabsPrimitive.Trigger
       className={cn(
-        'inline-flex items-center justify-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium text-[#86868b] transition-all duration-200 cursor-pointer',
-        'hover:text-[#1d1d1f] dark:hover:text-white',
-        'data-[state=active]:bg-white data-[state=active]:text-[#1d1d1f] data-[state=active]:shadow-sm',
-        'dark:data-[state=active]:bg-white/12 dark:data-[state=active]:text-white',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(0,122,255)]',
-        'disabled:pointer-events-none disabled:opacity-50',
+        'inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-muted-foreground transition-all duration-300 ease-out cursor-pointer select-none',
+        'hover:text-foreground hover:scale-[1.01]',
+        'data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-[0_2px_8px_rgba(0,0,0,0.03),0_1px_2px_rgba(0,0,0,0.02)] data-[state=active]:border-border/20 data-[state=active]:scale-[1.02]',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1',
+        'disabled:pointer-events-none disabled:opacity-40 active:scale-[0.97]',
+        'border border-transparent',
         className
       )}
       {...props}
@@ -45,7 +45,10 @@ function TabsContent({
 }: ComponentPropsWithoutRef<typeof TabsPrimitive.Content>) {
   return (
     <TabsPrimitive.Content
-      className={cn('mt-4 focus-visible:outline-none', className)}
+      className={cn(
+        'mt-4 focus-visible:outline-none transition-all duration-300 ease-out',
+        className
+      )}
       {...props}
     />
   );

@@ -15,10 +15,7 @@ function DialogOverlay({
 }: ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>) {
   return (
     <DialogPrimitive.Overlay
-      className={cn(
-        'fixed inset-0 z-50 bg-black/20 backdrop-blur-sm dark:bg-black/40',
-        className
-      )}
+      className={cn('fixed inset-0 z-50 bg-foreground/25 backdrop-blur-[6px]', className)}
       {...props}
     />
   );
@@ -32,25 +29,21 @@ function DialogContent({
   return (
     <DialogPortal>
       <DialogOverlay />
-      <DialogPrimitive.Content
-        asChild
-        {...props}
-      >
+      <DialogPrimitive.Content asChild {...props}>
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 8 }}
+          initial={{ opacity: 0, scale: 0.96, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 8 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          exit={{ opacity: 0, scale: 0.96, y: 12 }}
+          transition={{ type: 'spring', stiffness: 350, damping: 28 }}
           className={cn(
             'fixed left-[50%] top-[50%] z-50 w-full max-w-lg translate-x-[-50%] translate-y-[-50%]',
-            'rounded-2xl border border-black/8 bg-white/80 p-6 shadow-[0_24px_64px_0_rgba(0,0,0,0.12)]',
-            'backdrop-blur-xl dark:bg-[#0a0a0c]/80 dark:border-white/8',
-            'focus:outline-none',
+            'rounded-2xl border border-border/50 bg-popover/85 p-6 shadow-2xl backdrop-blur-3xl',
+            'focus:outline-none focus:ring-0',
             className
           )}
         >
           {children}
-          <DialogPrimitive.Close className="absolute right-4 top-4 rounded-xl p-1.5 text-[#86868b] hover:bg-black/8 hover:text-[#1d1d1f] transition-colors dark:hover:bg-white/10 dark:hover:text-white">
+          <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full p-2 text-muted-foreground hover:bg-muted/70 hover:text-foreground hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer">
             <X className="h-4 w-4" />
             <span className="sr-only">Cerrar</span>
           </DialogPrimitive.Close>
@@ -61,7 +54,7 @@ function DialogContent({
 }
 
 function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('flex flex-col gap-1.5 mb-5', className)} {...props} />;
+  return <div className={cn('flex flex-col gap-2 mb-5 border-b border-border/20 pb-4', className)} {...props} />;
 }
 
 function DialogTitle({
@@ -70,7 +63,7 @@ function DialogTitle({
 }: ComponentPropsWithoutRef<typeof DialogPrimitive.Title>) {
   return (
     <DialogPrimitive.Title
-      className={cn('text-lg font-semibold tracking-tight text-[#1d1d1f] dark:text-white', className)}
+      className={cn('text-lg font-bold tracking-tight text-foreground/90', className)}
       {...props}
     />
   );
@@ -82,7 +75,7 @@ function DialogDescription({
 }: ComponentPropsWithoutRef<typeof DialogPrimitive.Description>) {
   return (
     <DialogPrimitive.Description
-      className={cn('text-sm text-[#86868b]', className)}
+      className={cn('text-sm text-muted-foreground font-medium', className)}
       {...props}
     />
   );
@@ -90,10 +83,7 @@ function DialogDescription({
 
 function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div
-      className={cn('flex items-center justify-end gap-2 mt-6', className)}
-      {...props}
-    />
+    <div className={cn('flex items-center justify-end gap-2 mt-6 border-t border-border/20 pt-4', className)} {...props} />
   );
 }
 
