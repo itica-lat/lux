@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export function useSkeleton(delay = 200): boolean {
   const [showing, setShowing] = useState(true);
@@ -13,7 +13,7 @@ export function useSkeleton(delay = 200): boolean {
 
 export function useAsync<T>(
   fn: () => Promise<T>,
-  deps: unknown[] = []
+  deps: unknown[] = [],
 ): { data: T | null; isLoading: boolean; error: string | null; refetch: () => void } {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,23 +26,25 @@ export function useAsync<T>(
     setError(null);
 
     fn()
-      .then(result => {
+      .then((result) => {
         if (!cancelled) setData(result);
       })
       .catch((err: unknown) => {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : 'Error desconocido');
+          setError(err instanceof Error ? err.message : "Error desconocido");
         }
       })
       .finally(() => {
         if (!cancelled) setIsLoading(false);
       });
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger, ...deps]);
 
-  const refetch = () => setTrigger(t => t + 1);
+  const refetch = () => setTrigger((t) => t + 1);
 
   return { data, isLoading, error, refetch };
 }

@@ -1,13 +1,7 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  type ReactNode,
-} from 'react';
-import { createElement } from 'react';
-import type { AuthUser, UserRole } from '@/lib/types';
-import { gql } from '@/lib/utils';
+import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createElement } from "react";
+import type { AuthUser, UserRole } from "@/lib/types";
+import { gql } from "@/lib/utils";
 
 interface AuthContextType {
   user: AuthUser | null;
@@ -40,7 +34,7 @@ interface LoginData {
   login: AuthUser;
 }
 
-const STORAGE_KEY = 'lux_auth';
+const STORAGE_KEY = "lux_auth";
 
 function loadStoredUser(): AuthUser | null {
   try {
@@ -78,18 +72,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!user) return false;
       return roles.includes(user.role);
     },
-    [user]
+    [user],
   );
 
   return createElement(
     AuthContext.Provider,
     { value: { user, isAuthenticated: user !== null, isLoading, login, logout, hasRole } },
-    children
+    children,
   );
 }
 
 export function useAuth(): AuthContextType {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used within AuthProvider');
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
   return ctx;
 }

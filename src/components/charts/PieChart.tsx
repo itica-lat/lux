@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { motion } from "motion/react";
 import {
   PieChart as RechartsPie,
   Pie,
@@ -7,8 +7,8 @@ import {
   Legend,
   ResponsiveContainer,
   type TooltipProps,
-} from 'recharts';
-import { SPRING_TRANSITION } from '@/lib/constants';
+} from "recharts";
+import { SPRING_TRANSITION } from "@/lib/constants";
 
 interface PieDataItem {
   name: string;
@@ -39,9 +39,7 @@ export function LuxPieChart({ data, title }: PieChartProps) {
       transition={SPRING_TRANSITION}
       className="rounded-2xl border border-border bg-card/40 backdrop-blur-xl p-6"
     >
-      {title && (
-        <p className="text-sm font-semibold text-foreground mb-6">{title}</p>
-      )}
+      {title && <p className="text-sm font-semibold text-foreground mb-6">{title}</p>}
       <ResponsiveContainer width="100%" height={200}>
         <RechartsPie>
           <Pie
@@ -64,7 +62,7 @@ export function LuxPieChart({ data, title }: PieChartProps) {
             iconType="circle"
             iconSize={8}
             formatter={(value) => (
-              <span style={{ fontSize: '12px', color: 'var(--muted-foreground)' }}>{value}</span>
+              <span style={{ fontSize: "12px", color: "var(--muted-foreground)" }}>{value}</span>
             )}
           />
         </RechartsPie>

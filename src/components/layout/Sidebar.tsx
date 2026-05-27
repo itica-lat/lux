@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
+import { motion, AnimatePresence } from "motion/react";
 import {
   LayoutDashboard,
   Package,
@@ -12,28 +12,61 @@ import {
   ChevronLeft,
   ChevronRight,
   Zap,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { ROUTES, SPRING_TRANSITION } from '@/lib/constants';
-import { useAuth } from '@/hooks/useAuth';
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ROUTES, SPRING_TRANSITION } from "@/lib/constants";
+import { useAuth } from "@/hooks/useAuth";
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'Inicio', to: ROUTES.DASHBOARD, roles: ['root_admin', 'admin', 'tecnico', 'solicitante'] as const },
-  { icon: Package, label: 'Inventario', to: ROUTES.INVENTORY, roles: ['root_admin', 'admin', 'tecnico', 'solicitante'] as const },
-  { icon: Monitor, label: 'Estado de Equipos', to: ROUTES.EQUIPMENT_STATUS, roles: ['root_admin', 'admin', 'tecnico', 'solicitante'] as const },
-  { icon: Ticket, label: 'Tickets', to: ROUTES.TICKETS, roles: ['root_admin', 'admin', 'tecnico', 'solicitante'] as const },
-  { icon: BookOpen, label: 'Préstamos', to: ROUTES.LOANS, roles: ['root_admin', 'admin', 'tecnico'] as const },
-  { icon: Wrench, label: 'Solicitudes', to: ROUTES.SERVICES, roles: ['root_admin', 'admin', 'tecnico', 'solicitante'] as const },
-  { icon: User, label: 'Perfil', to: ROUTES.PROFILE, roles: ['root_admin', 'admin', 'tecnico', 'solicitante'] as const },
+  {
+    icon: LayoutDashboard,
+    label: "Inicio",
+    to: ROUTES.DASHBOARD,
+    roles: ["root_admin", "admin", "tecnico", "solicitante"] as const,
+  },
+  {
+    icon: Package,
+    label: "Inventario",
+    to: ROUTES.INVENTORY,
+    roles: ["root_admin", "admin", "tecnico", "solicitante"] as const,
+  },
+  {
+    icon: Monitor,
+    label: "Estado de Equipos",
+    to: ROUTES.EQUIPMENT_STATUS,
+    roles: ["root_admin", "admin", "tecnico", "solicitante"] as const,
+  },
+  {
+    icon: Ticket,
+    label: "Tickets",
+    to: ROUTES.TICKETS,
+    roles: ["root_admin", "admin", "tecnico", "solicitante"] as const,
+  },
+  {
+    icon: BookOpen,
+    label: "Préstamos",
+    to: ROUTES.LOANS,
+    roles: ["root_admin", "admin", "tecnico"] as const,
+  },
+  {
+    icon: Wrench,
+    label: "Solicitudes",
+    to: ROUTES.SERVICES,
+    roles: ["root_admin", "admin", "tecnico", "solicitante"] as const,
+  },
+  {
+    icon: User,
+    label: "Perfil",
+    to: ROUTES.PROFILE,
+    roles: ["root_admin", "admin", "tecnico", "solicitante"] as const,
+  },
 ];
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const { user } = useAuth();
 
-  const visibleItems = navItems.filter(item =>
-    user && item.roles.some(r => r === user.role)
-  );
+  const visibleItems = navItems.filter((item) => user && item.roles.some((r) => r === user.role));
 
   return (
     <motion.aside
@@ -75,12 +108,12 @@ export function Sidebar() {
             end={to === ROUTES.DASHBOARD}
             className={({ isActive }) =>
               cn(
-                'flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition-all duration-200 cursor-pointer',
-                'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                "flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition-all duration-200 cursor-pointer",
+                "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                 isActive
-                  ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium shadow-sm'
-                  : 'text-muted-foreground',
-                collapsed && 'justify-center px-2'
+                  ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium shadow-sm"
+                  : "text-muted-foreground",
+                collapsed && "justify-center px-2",
               )
             }
           >
@@ -89,7 +122,7 @@ export function Sidebar() {
               {!collapsed && (
                 <motion.span
                   initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: 'auto' }}
+                  animate={{ opacity: 1, width: "auto" }}
                   exit={{ opacity: 0, width: 0 }}
                   transition={{ duration: 0.15 }}
                   className="truncate overflow-hidden whitespace-nowrap"
@@ -104,12 +137,12 @@ export function Sidebar() {
 
       <div className="p-2 border-t border-sidebar-border">
         <button
-          onClick={() => setCollapsed(c => !c)}
+          onClick={() => setCollapsed((c) => !c)}
           className={cn(
-            'flex w-full items-center gap-2 rounded-xl px-3 py-2 text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors cursor-pointer',
-            collapsed && 'justify-center px-2'
+            "flex w-full items-center gap-2 rounded-xl px-3 py-2 text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors cursor-pointer",
+            collapsed && "justify-center px-2",
           )}
-          aria-label={collapsed ? 'Expandir sidebar' : 'Colapsar sidebar'}
+          aria-label={collapsed ? "Expandir sidebar" : "Colapsar sidebar"}
         >
           {collapsed ? (
             <ChevronRight className="h-4 w-4" />

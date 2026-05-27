@@ -1,4 +1,4 @@
-export type UserRole = 'root_admin' | 'admin' | 'tecnico' | 'solicitante';
+export type UserRole = "root_admin" | "admin" | "tecnico" | "solicitante";
 
 export interface User {
   id: string;
@@ -11,12 +11,12 @@ export interface User {
   updatedAt: string;
 }
 
-export type EquipmentStatus = 'available' | 'in_use' | 'in_repair' | 'retired';
-export type Location = 'Laboratorios' | 'Salones' | 'Administración' | 'Otros';
+export type EquipmentStatus = "available" | "in_use" | "in_repair" | "retired";
+export type Location = "Laboratorios" | "Salones" | "Administración" | "Otros";
 
 export interface Product {
   id: string;
-  type: 'product';
+  type: "product";
   kind: string;
   brand: string;
   model: string;
@@ -33,7 +33,7 @@ export interface Product {
 
 export interface Component {
   id: string;
-  type: 'component';
+  type: "component";
   name: string;
   model: string;
   manufacturer: string;
@@ -49,8 +49,8 @@ export interface Component {
 
 export type Equipment = Product | Component;
 
-export type TicketStatus = 'pending' | 'in_progress' | 'in_resolution' | 'resolved';
-export type TicketCategory = 'hardware' | 'software' | 'network' | 'other';
+export type TicketStatus = "pending" | "in_progress" | "in_resolution" | "resolved";
+export type TicketCategory = "hardware" | "software" | "network" | "other";
 
 export interface Ticket {
   id: string;
@@ -70,7 +70,7 @@ export interface Ticket {
   resolvedAt: string | null;
 }
 
-export type LoanStatus = 'pending' | 'approved' | 'active' | 'overdue' | 'returned';
+export type LoanStatus = "pending" | "approved" | "active" | "overdue" | "returned";
 
 export interface Loan {
   id: string;
@@ -87,8 +87,8 @@ export interface Loan {
   updatedAt: string;
 }
 
-export type ServiceType = 'lab_preparation' | 'software_installation' | 'equipment_setup' | 'other';
-export type ServiceStatus = 'pending' | 'approved' | 'in_progress' | 'completed' | 'rejected';
+export type ServiceType = "lab_preparation" | "software_installation" | "equipment_setup" | "other";
+export type ServiceStatus = "pending" | "approved" | "in_progress" | "completed" | "rejected";
 
 export interface ServiceRequest {
   id: string;
@@ -128,8 +128,8 @@ export interface AuthUser extends User {
   token: string;
 }
 
-export type FontSize = 'sm' | 'md' | 'lg' | 'xl';
-export type Theme = 'light' | 'dark';
+export type FontSize = "sm" | "md" | "lg" | "xl";
+export type Theme = "light" | "dark";
 
 export interface ThemeSettings {
   theme: Theme;
@@ -143,6 +143,4 @@ export interface GraphQLResponse<T> {
   errors?: Array<{ message: string }>;
 }
 
-export type Result<T, E = Error> =
-  | { ok: true; value: T }
-  | { ok: false; error: E };
+export type Result<T, E = Error> = { ok: true; value: T } | { ok: false; error: E };

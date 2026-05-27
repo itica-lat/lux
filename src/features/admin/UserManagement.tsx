@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { Plus, Search } from 'lucide-react';
-import { useAsync } from '@/hooks/useSkeleton';
-import { gql, cn } from '@/lib/utils';
-import { ROLE_LABELS } from '@/lib/constants';
-import type { User, UserRole } from '@/lib/types';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { TableSkeleton } from '@/components/skeletons/TableSkeleton';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { UserForm } from './UserForm';
+import { useState } from "react";
+import { Plus, Search } from "lucide-react";
+import { useAsync } from "@/hooks/useSkeleton";
+import { gql, cn } from "@/lib/utils";
+import { ROLE_LABELS } from "@/lib/constants";
+import type { User, UserRole } from "@/lib/types";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { TableSkeleton } from "@/components/skeletons/TableSkeleton";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { UserForm } from "./UserForm";
 
 const USERS_QUERY = `
   query GetUsers {
@@ -22,24 +22,25 @@ const DELETE_USER_MUTATION = `
 `;
 
 export function UserManagement() {
-  const [search, setSearch] = useState('');
-  const [roleFilter, setRoleFilter] = useState<UserRole | ''>('');
+  const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState<UserRole | "">("");
   const [createOpen, setCreateOpen] = useState(false);
   const [editUser, setEditUser] = useState<User | null>(null);
 
-  const { data, isLoading, refetch } = useAsync<{ users: User[] }>(
-    () => gql(USERS_QUERY),
-    []
-  );
+  const { data, isLoading, refetch } = useAsync<{ users: User[] }>(() => gql(USERS_QUERY), []);
 
-  const users = (data?.users ?? []).filter(u => {
-    const matchSearch = !search || u.name.toLowerCase().includes(search.toLowerCase()) || u.dni.includes(search) || u.email.toLowerCase().includes(search.toLowerCase());
+  const users = (data?.users ?? []).filter((u) => {
+    const matchSearch =
+      !search ||
+      u.name.toLowerCase().includes(search.toLowerCase()) ||
+      u.dni.includes(search) ||
+      u.email.toLowerCase().includes(search.toLowerCase());
     const matchRole = !roleFilter || u.role === roleFilter;
     return matchSearch && matchRole;
   });
 
   const handleDelete = async (id: string) => {
-    if (!confirm('¿Desactivar este usuario?')) return;
+    if (!confirm("¿Desactivar este usuario?")) return;
     await gql(DELETE_USER_MUTATION, { id });
     refetch();
   };
@@ -63,11 +64,16 @@ export function UserManagement() {
       <div className="flex gap-3">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Buscar por nombre, cédula, email..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
+          <Input
+            placeholder="Buscar por nombre, cédula, email..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9"
+          />
         </div>
         <select
           value={roleFilter}
-          onChange={e => setRoleFilter(e.target.value as UserRole | '')}
+          onChange={(e) => setRoleFilter(e.target.value as UserRole | "")}
           className="h-10 rounded-xl border border-input bg-card/50 px-3 text-sm text-foreground focus:outline-none focus:border-ring cursor-pointer"
         >
           <option value="">Todos los roles</option>
@@ -81,17 +87,26 @@ export function UserManagement() {
       {showSkeleton ? (
         <TableSkeleton rows={8} cols={5} />
       ) : users.length === 0 ? (
-        <div className="text-center py-16 text-muted-foreground text-sm font-medium">No se encontraron usuarios</div>
+        <div className="text-center py-16 text-muted-foreground text-sm font-medium">
+          No se encontraron usuarios
+        </div>
       ) : (
-        <div className={cn(
-          "rounded-2xl border border-border/70 overflow-x-auto bg-card/20 backdrop-blur-sm transition-all duration-300 ease-out",
-          isLoading && "opacity-75 blur-xs pointer-events-none"
-        )}>
+        <div
+          className={cn(
+            "rounded-2xl border border-border/70 overflow-x-auto bg-card/20 backdrop-blur-sm transition-all duration-300 ease-out",
+            isLoading && "opacity-75 blur-xs pointer-events-none",
+          )}
+        >
           <table className="w-full">
             <thead>
               <tr className="border-b border-border">
-                {['Nombre', 'Cédula', 'Email', 'Rol', 'Estado', 'Acciones'].map(h => (
-                  <th key={h} className="px-6 py-3 text-left text-xs font-medium uppercase tracking-widest text-muted-foreground">{h}</th>
+                {["Nombre", "Cédula", "Email", "Rol", "Estado", "Acciones"].map((h) => (
+                  <th
+                    key={h}
+                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-widest text-muted-foreground"
+                  >
+                    {h}
+                  </th>
                 ))}
               </tr>
             </thead>
@@ -105,18 +120,34 @@ export function UserManagement() {
                   <td className="px-6 py-4 text-sm text-muted-foreground font-mono">{u.dni}</td>
                   <td className="px-6 py-4 text-sm text-muted-foreground">{u.email}</td>
                   <td className="px-6 py-4">
-                    <Badge color={u.role === 'root_admin' ? 'destructive' : u.role === 'admin' ? 'warning' : u.role === 'tecnico' ? 'info' : 'muted'}>
+                    <Badge
+                      color={
+                        u.role === "root_admin"
+                          ? "destructive"
+                          : u.role === "admin"
+                            ? "warning"
+                            : u.role === "tecnico"
+                              ? "info"
+                              : "muted"
+                      }
+                    >
                       {ROLE_LABELS[u.role]}
                     </Badge>
                   </td>
                   <td className="px-6 py-4">
-                    <Badge color={u.isActive ? 'success' : 'destructive'} withDot={u.isActive}>{u.isActive ? 'Activo' : 'Inactivo'}</Badge>
+                    <Badge color={u.isActive ? "success" : "destructive"} withDot={u.isActive}>
+                      {u.isActive ? "Activo" : "Inactivo"}
+                    </Badge>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex gap-2">
-                      <Button size="sm" variant="ghost" onClick={() => setEditUser(u)}>Editar</Button>
-                      {u.role !== 'root_admin' && u.isActive && (
-                        <Button size="sm" variant="destructive" onClick={() => handleDelete(u.id)}>Desactivar</Button>
+                      <Button size="sm" variant="ghost" onClick={() => setEditUser(u)}>
+                        Editar
+                      </Button>
+                      {u.role !== "root_admin" && u.isActive && (
+                        <Button size="sm" variant="destructive" onClick={() => handleDelete(u.id)}>
+                          Desactivar
+                        </Button>
                       )}
                     </div>
                   </td>
@@ -128,15 +159,32 @@ export function UserManagement() {
       )}
 
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent><DialogHeader><DialogTitle>Nuevo usuario</DialogTitle></DialogHeader>
-          <UserForm onSuccess={() => { setCreateOpen(false); refetch(); }} />
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Nuevo usuario</DialogTitle>
+          </DialogHeader>
+          <UserForm
+            onSuccess={() => {
+              setCreateOpen(false);
+              refetch();
+            }}
+          />
         </DialogContent>
       </Dialog>
 
-      <Dialog open={editUser !== null} onOpenChange={open => !open && setEditUser(null)}>
-        <DialogContent><DialogHeader><DialogTitle>Editar usuario</DialogTitle></DialogHeader>
+      <Dialog open={editUser !== null} onOpenChange={(open) => !open && setEditUser(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Editar usuario</DialogTitle>
+          </DialogHeader>
           {editUser && (
-            <UserForm user={editUser} onSuccess={() => { setEditUser(null); refetch(); }} />
+            <UserForm
+              user={editUser}
+              onSuccess={() => {
+                setEditUser(null);
+                refetch();
+              }}
+            />
           )}
         </DialogContent>
       </Dialog>

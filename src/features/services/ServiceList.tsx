@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Plus } from 'lucide-react';
-import { useAsync } from '@/hooks/useSkeleton';
-import { useAuth } from '@/hooks/useAuth';
-import { gql, formatDate, truncate, cn } from '@/lib/utils';
-import { SERVICE_STATUS_CONFIG, SERVICE_TYPE_LABELS, ROUTES } from '@/lib/constants';
-import type { ServiceRequest, ServiceStatus } from '@/lib/types';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { TableSkeleton } from '@/components/skeletons/TableSkeleton';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { ServiceForm } from './ServiceForm';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Plus } from "lucide-react";
+import { useAsync } from "@/hooks/useSkeleton";
+import { useAuth } from "@/hooks/useAuth";
+import { gql, formatDate, truncate, cn } from "@/lib/utils";
+import { SERVICE_STATUS_CONFIG, SERVICE_TYPE_LABELS, ROUTES } from "@/lib/constants";
+import type { ServiceRequest, ServiceStatus } from "@/lib/types";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { TableSkeleton } from "@/components/skeletons/TableSkeleton";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ServiceForm } from "./ServiceForm";
 
 const SERVICES_QUERY = `
   query GetServiceRequests($requestedById: ID) {
@@ -24,29 +24,33 @@ const SERVICES_QUERY = `
 
 export function ServiceList() {
   const { user, hasRole } = useAuth();
-  const [statusFilter, setStatusFilter] = useState<ServiceStatus | ''>('');
+  const [statusFilter, setStatusFilter] = useState<ServiceStatus | "">("");
   const [createOpen, setCreateOpen] = useState(false);
 
-  const isSolicitante = !hasRole('root_admin', 'admin', 'tecnico');
+  const isSolicitante = !hasRole("root_admin", "admin", "tecnico");
 
   const { data, isLoading, refetch } = useAsync<{ serviceRequests: ServiceRequest[] }>(
     () => gql(SERVICES_QUERY, { requestedById: isSolicitante ? user?.id : undefined }),
-    [isSolicitante, user?.id]
+    [isSolicitante, user?.id],
   );
 
-  const services = (data?.serviceRequests ?? []).filter(s =>
-    !statusFilter || s.status === statusFilter
+  const services = (data?.serviceRequests ?? []).filter(
+    (s) => !statusFilter || s.status === statusFilter,
   );
 
   // Show full skeleton ONLY on the very first empty load
   const showSkeleton = isLoading && !data;
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <div className="space-y-6 max-w-full">
       <div className="flex items-end justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Solicitudes de Servicio</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Gestión de solicitudes del instituto</p>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            Solicitudes de Servicio
+          </h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            Gestión de solicitudes del instituto
+          </p>
         </div>
         <Button size="sm" onClick={() => setCreateOpen(true)}>
           <Plus className="h-3.5 w-3.5" />
@@ -57,7 +61,7 @@ export function ServiceList() {
       <div className="flex gap-3">
         <select
           value={statusFilter}
-          onChange={e => setStatusFilter(e.target.value as ServiceStatus | '')}
+          onChange={(e) => setStatusFilter(e.target.value as ServiceStatus | "")}
           className="h-10 rounded-xl border border-input bg-card/50 px-3 text-sm text-foreground focus:outline-none focus:border-ring cursor-pointer"
         >
           <option value="">Todos los estados</option>
@@ -72,17 +76,26 @@ export function ServiceList() {
       {showSkeleton ? (
         <TableSkeleton rows={6} cols={5} />
       ) : services.length === 0 ? (
-        <div className="text-center py-16 text-muted-foreground text-sm font-medium">No hay solicitudes de servicio</div>
+        <div className="text-center py-16 text-muted-foreground text-sm font-medium">
+          No hay solicitudes de servicio
+        </div>
       ) : (
-        <div className={cn(
-          "rounded-2xl border border-border/70 overflow-x-auto bg-card/20 backdrop-blur-sm transition-all duration-300 ease-out",
-          isLoading && "opacity-75 blur-xs pointer-events-none"
-        )}>
+        <div
+          className={cn(
+            "rounded-2xl border border-border/70 overflow-x-auto bg-card/20 backdrop-blur-sm transition-all duration-300 ease-out",
+            isLoading && "opacity-75 blur-xs pointer-events-none",
+          )}
+        >
           <table className="w-full">
             <thead>
               <tr className="border-b border-border">
-                {['ID', 'Tipo', 'Descripción', 'Estado', 'Solicitante', 'Fecha', ''].map(h => (
-                  <th key={h} className="px-6 py-3 text-left text-xs font-medium uppercase tracking-widest text-muted-foreground">{h}</th>
+                {["ID", "Tipo", "Descripción", "Estado", "Solicitante", "Fecha", ""].map((h) => (
+                  <th
+                    key={h}
+                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-widest text-muted-foreground"
+                  >
+                    {h}
+                  </th>
                 ))}
               </tr>
             </thead>
@@ -95,17 +108,25 @@ export function ServiceList() {
                     className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors"
                   >
                     <td className="px-6 py-4 text-xs text-muted-foreground font-mono">{s.id}</td>
-                    <td className="px-6 py-4 text-sm text-muted-foreground font-medium">{SERVICE_TYPE_LABELS[s.type]}</td>
+                    <td className="px-6 py-4 text-sm text-muted-foreground font-medium">
+                      {SERVICE_TYPE_LABELS[s.type]}
+                    </td>
                     <td className="px-6 py-4 text-sm text-foreground max-w-[200px]">
                       {truncate(s.description, 60)}
                     </td>
                     <td className="px-6 py-4">
-                      <Badge color={statusConf.color} withDot>{statusConf.label}</Badge>
+                      <Badge color={statusConf.color} withDot>
+                        {statusConf.label}
+                      </Badge>
                     </td>
-                    <td className="px-6 py-4 text-sm text-muted-foreground font-medium">{s.requestedBy.name}</td>
-                    <td className="px-6 py-4 text-xs text-muted-foreground">{formatDate(s.createdAt)}</td>
+                    <td className="px-6 py-4 text-sm text-muted-foreground font-medium">
+                      {s.requestedBy.name}
+                    </td>
+                    <td className="px-6 py-4 text-xs text-muted-foreground">
+                      {formatDate(s.createdAt)}
+                    </td>
                     <td className="px-6 py-4">
-                      {hasRole('root_admin', 'admin', 'tecnico') && (
+                      {hasRole("root_admin", "admin", "tecnico") && (
                         <Link
                           to={`${ROUTES.SERVICES}/${s.id}`}
                           className="text-xs text-primary hover:underline font-semibold"
@@ -127,7 +148,12 @@ export function ServiceList() {
           <DialogHeader>
             <DialogTitle>Nueva solicitud de servicio</DialogTitle>
           </DialogHeader>
-          <ServiceForm onSuccess={() => { setCreateOpen(false); refetch(); }} />
+          <ServiceForm
+            onSuccess={() => {
+              setCreateOpen(false);
+              refetch();
+            }}
+          />
         </DialogContent>
       </Dialog>
     </div>

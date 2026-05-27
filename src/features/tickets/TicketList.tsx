@@ -1,19 +1,32 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Plus, Search, AlertCircle } from 'lucide-react';
-import { useAsync } from '@/hooks/useSkeleton';
-import { useAuth } from '@/hooks/useAuth';
-import { gql, formatDate, truncate, cn } from '@/lib/utils';
-import { TICKET_STATUS_CONFIG, TICKET_CATEGORY_LABELS, ROUTES } from '@/lib/constants';
-import type { Ticket, TicketStatus } from '@/lib/types';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { TableSkeleton } from '@/components/skeletons/TableSkeleton';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, AnimatePresence } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Plus, Search, AlertCircle } from "lucide-react";
+import { useAsync } from "@/hooks/useSkeleton";
+import { useAuth } from "@/hooks/useAuth";
+import { gql, formatDate, truncate, cn } from "@/lib/utils";
+import { TICKET_STATUS_CONFIG, TICKET_CATEGORY_LABELS, ROUTES } from "@/lib/constants";
+import type { Ticket, TicketStatus } from "@/lib/types";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { TableSkeleton } from "@/components/skeletons/TableSkeleton";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  AnimatePresence,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const TICKETS_QUERY = `
   query GetTickets($submittedById: ID) {
@@ -34,20 +47,25 @@ const CREATE_TICKET_MUTATION = `
 
 export function TicketList() {
   const { user, hasRole } = useAuth();
-  const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<TicketStatus | ''>('');
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<TicketStatus | "">("");
   const [createOpen, setCreateOpen] = useState(false);
-  const [form, setForm] = useState({ title: '', description: '', category: 'hardware', equipmentId: '' });
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    category: "hardware",
+    equipmentId: "",
+  });
   const [saving, setSaving] = useState(false);
 
-  const isSolicitante = !hasRole('root_admin', 'admin', 'tecnico');
+  const isSolicitante = !hasRole("root_admin", "admin", "tecnico");
 
   const { data, isLoading, error, refetch } = useAsync<{ tickets: Ticket[] }>(
     () => gql(TICKETS_QUERY, { submittedById: isSolicitante ? user?.id : undefined }),
-    [isSolicitante, user?.id]
+    [isSolicitante, user?.id],
   );
 
-  const tickets = (data?.tickets ?? []).filter(t => {
+  const tickets = (data?.tickets ?? []).filter((t) => {
     const matchSearch = !search || t.title.toLowerCase().includes(search.toLowerCase());
     const matchStatus = !statusFilter || t.status === statusFilter;
     return matchSearch && matchStatus;
@@ -66,7 +84,7 @@ export function TicketList() {
         },
       });
       setCreateOpen(false);
-      setForm({ title: '', description: '', category: 'hardware', equipmentId: '' });
+      setForm({ title: "", description: "", category: "hardware", equipmentId: "" });
       refetch();
     } finally {
       setSaving(false);
@@ -77,20 +95,20 @@ export function TicketList() {
   const showSkeleton = isLoading && !data;
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <div className="space-y-6 max-w-full">
       <div className="flex items-end justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-foreground">Tickets</h1>
           <p className="text-sm text-muted-foreground mt-0.5">Mesa de ayuda</p>
         </div>
         <div className="flex gap-2">
-          {!hasRole('root_admin', 'admin', 'tecnico') && (
+          {!hasRole("root_admin", "admin", "tecnico") && (
             <Button size="sm" onClick={() => setCreateOpen(true)}>
               <Plus className="h-3.5 w-3.5" />
               Nuevo ticket
             </Button>
           )}
-          {hasRole('root_admin', 'admin', 'tecnico') && (
+          {hasRole("root_admin", "admin", "tecnico") && (
             <Button variant="secondary" size="sm" asChild>
               <Link to={`${ROUTES.TICKETS}/ool`}>
                 <AlertCircle className="h-3.5 w-3.5" />
@@ -104,11 +122,16 @@ export function TicketList() {
       <div className="flex gap-3 flex-wrap">
         <div className="relative flex-1 min-w-[200px] max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Buscar tickets..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
+          <Input
+            placeholder="Buscar tickets..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9"
+          />
         </div>
         <select
           value={statusFilter}
-          onChange={e => setStatusFilter(e.target.value as TicketStatus | '')}
+          onChange={(e) => setStatusFilter(e.target.value as TicketStatus | "")}
           className="h-10 rounded-xl border border-input bg-card/50 px-3 text-sm text-foreground focus:outline-none focus:border-ring cursor-pointer"
         >
           <option value="">Todos los estados</option>
@@ -130,16 +153,25 @@ export function TicketList() {
       ) : tickets.length === 0 ? (
         <div className="text-center py-16 text-muted-foreground text-sm">No hay tickets</div>
       ) : (
-        <div className={cn(
-          "rounded-2xl border border-border/70 overflow-x-auto bg-card/20 backdrop-blur-sm transition-all duration-300 ease-out",
-          isLoading && "opacity-75 blur-xs pointer-events-none"
-        )}>
+        <div
+          className={cn(
+            "rounded-2xl border border-border/70 overflow-x-auto bg-card/20 backdrop-blur-sm transition-all duration-300 ease-out",
+            isLoading && "opacity-75 blur-xs pointer-events-none",
+          )}
+        >
           <table className="w-full">
             <thead>
               <tr className="border-b border-border">
-                {['ID', 'Título', 'Estado', 'Categoría', 'Asignado a', 'Solicitante', 'Fecha'].map(h => (
-                  <th key={h} className="px-6 py-3 text-left text-xs font-medium uppercase tracking-widest text-muted-foreground">{h}</th>
-                ))}
+                {["ID", "Título", "Estado", "Categoría", "Asignado a", "Solicitante", "Fecha"].map(
+                  (h) => (
+                    <th
+                      key={h}
+                      className="px-6 py-3 text-left text-xs font-medium uppercase tracking-widest text-muted-foreground"
+                    >
+                      {h}
+                    </th>
+                  ),
+                )}
               </tr>
             </thead>
             <tbody>
@@ -152,21 +184,36 @@ export function TicketList() {
                   >
                     <td className="px-6 py-4 text-xs text-muted-foreground font-mono">{t.id}</td>
                     <td className="px-6 py-4">
-                      {hasRole('root_admin', 'admin', 'tecnico') ? (
-                        <Link to={`${ROUTES.TICKETS}/${t.id}`} className="text-sm font-semibold text-foreground hover:underline">
+                      {hasRole("root_admin", "admin", "tecnico") ? (
+                        <Link
+                          to={`${ROUTES.TICKETS}/${t.id}`}
+                          className="text-sm font-semibold text-foreground hover:underline"
+                        >
                           {truncate(t.title, 48)}
                         </Link>
                       ) : (
-                        <span className="text-sm text-foreground font-semibold">{truncate(t.title, 48)}</span>
+                        <span className="text-sm text-foreground font-semibold">
+                          {truncate(t.title, 48)}
+                        </span>
                       )}
                     </td>
                     <td className="px-6 py-4">
-                      <Badge color={statusConf.color} withDot>{statusConf.label}</Badge>
+                      <Badge color={statusConf.color} withDot>
+                        {statusConf.label}
+                      </Badge>
                     </td>
-                    <td className="px-6 py-4 text-sm text-muted-foreground font-medium">{TICKET_CATEGORY_LABELS[t.category]}</td>
-                    <td className="px-6 py-4 text-sm text-muted-foreground font-medium">{t.assignedTo?.name ?? '—'}</td>
-                    <td className="px-6 py-4 text-sm text-muted-foreground font-medium">{t.submittedBy.name}</td>
-                    <td className="px-6 py-4 text-xs text-muted-foreground">{formatDate(t.createdAt)}</td>
+                    <td className="px-6 py-4 text-sm text-muted-foreground font-medium">
+                      {TICKET_CATEGORY_LABELS[t.category]}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-muted-foreground font-medium">
+                      {t.assignedTo?.name ?? "—"}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-muted-foreground font-medium">
+                      {t.submittedBy.name}
+                    </td>
+                    <td className="px-6 py-4 text-xs text-muted-foreground">
+                      {formatDate(t.createdAt)}
+                    </td>
                   </tr>
                 );
               })}
@@ -185,16 +232,30 @@ export function TicketList() {
               <div className="space-y-4">
                 <div className="space-y-1.5">
                   <Label>Título</Label>
-                  <Input placeholder="Descripción breve del problema" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} />
+                  <Input
+                    placeholder="Descripción breve del problema"
+                    value={form.title}
+                    onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+                  />
                 </div>
                 <div className="space-y-1.5">
                   <Label>Descripción</Label>
-                  <Textarea placeholder="Describí el problema en detalle..." value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} className="h-28" />
+                  <Textarea
+                    placeholder="Describí el problema en detalle..."
+                    value={form.description}
+                    onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+                    className="h-28"
+                  />
                 </div>
                 <div className="space-y-1.5">
                   <Label>Categoría</Label>
-                  <Select value={form.category} onValueChange={v => setForm(f => ({ ...f, category: v }))}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                  <Select
+                    value={form.category}
+                    onValueChange={(v) => setForm((f) => ({ ...f, category: v }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="hardware">Hardware</SelectItem>
                       <SelectItem value="software">Software</SelectItem>
@@ -205,9 +266,11 @@ export function TicketList() {
                 </div>
               </div>
               <DialogFooter>
-                <Button variant="secondary" onClick={() => setCreateOpen(false)}>Cancelar</Button>
+                <Button variant="secondary" onClick={() => setCreateOpen(false)}>
+                  Cancelar
+                </Button>
                 <Button onClick={handleCreate} disabled={saving || !form.title.trim()}>
-                  {saving ? 'Enviando...' : 'Enviar ticket'}
+                  {saving ? "Enviando..." : "Enviar ticket"}
                 </Button>
               </DialogFooter>
             </DialogContent>

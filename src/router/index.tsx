@@ -1,31 +1,31 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { AppLayout } from '@/components/layout/AppLayout';
-import { AdminLayout } from '@/components/layout/AdminLayout';
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { Splash } from '@/features/splash/Splash';
-import { LoginPage } from '@/features/login/LoginPage';
-import { WaitToLogin } from '@/features/login/WaitToLogin';
-import { DashboardPage } from '@/features/dashboard/DashboardPage';
-import { InventoryPage } from '@/features/inventory/InventoryPage';
-import { ProductDetail } from '@/features/inventory/ProductDetail';
-import { ComponentDetail } from '@/features/inventory/ComponentDetail';
-import { EquipmentForm } from '@/features/inventory/EquipmentForm';
-import { EquipmentStatus } from '@/features/inventory/EquipmentStatus';
-import { TicketList } from '@/features/tickets/TicketList';
-import { TicketDetail } from '@/features/tickets/TicketDetail';
-import { OolList } from '@/features/tickets/OolList';
-import { LoansPage } from '@/features/loans/LoansPage';
-import { ServiceList } from '@/features/services/ServiceList';
-import { ServiceDetail } from '@/features/services/ServiceDetail';
-import { ProfilePage } from '@/features/profile/ProfilePage';
-import { AdminDashboard } from '@/features/admin/AdminDashboard';
-import { UserManagement } from '@/features/admin/UserManagement';
-import { RolesConfig } from '@/features/admin/RolesConfig';
-import { ActivityLog } from '@/features/admin/ActivityLog';
-import { NotFoundPage } from '@/features/errors/NotFoundPage';
-import { ForbiddenPage } from '@/features/errors/ForbiddenPage';
-import { ServerErrorPage } from '@/features/errors/ServerErrorPage';
-import { ROUTES } from '@/lib/constants';
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import { AppLayout } from "@/components/layout/AppLayout";
+import { AdminLayout } from "@/components/layout/AdminLayout";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { Splash } from "@/features/splash/Splash";
+import { LoginPage } from "@/features/login/LoginPage";
+import { WaitToLogin } from "@/features/login/WaitToLogin";
+import { DashboardPage } from "@/features/dashboard/DashboardPage";
+import { InventoryPage } from "@/features/inventory/InventoryPage";
+import { ProductDetail } from "@/features/inventory/ProductDetail";
+import { ComponentDetail } from "@/features/inventory/ComponentDetail";
+import { EquipmentForm } from "@/features/inventory/EquipmentForm";
+import { EquipmentStatus } from "@/features/inventory/EquipmentStatus";
+import { TicketList } from "@/features/tickets/TicketList";
+import { TicketDetail } from "@/features/tickets/TicketDetail";
+import { OolList } from "@/features/tickets/OolList";
+import { LoansPage } from "@/features/loans/LoansPage";
+import { ServiceList } from "@/features/services/ServiceList";
+import { ServiceDetail } from "@/features/services/ServiceDetail";
+import { ProfilePage } from "@/features/profile/ProfilePage";
+import { AdminDashboard } from "@/features/admin/AdminDashboard";
+import { UserManagement } from "@/features/admin/UserManagement";
+import { RolesConfig } from "@/features/admin/RolesConfig";
+import { ActivityLog } from "@/features/admin/ActivityLog";
+import { NotFoundPage } from "@/features/errors/NotFoundPage";
+import { ForbiddenPage } from "@/features/errors/ForbiddenPage";
+import { ServerErrorPage } from "@/features/errors/ServerErrorPage";
+import { ROUTES } from "@/lib/constants";
 
 export const router = createBrowserRouter([
   {
@@ -54,7 +54,7 @@ export const router = createBrowserRouter([
   },
 
   {
-    path: '/dashboard',
+    path: "/dashboard",
     element: (
       <ProtectedRoute>
         <AppLayout />
@@ -62,67 +62,67 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <DashboardPage /> },
-      { path: 'inventory', element: <InventoryPage /> },
-      { path: 'inventory/nuevo', element: <EquipmentForm mode="product" /> },
-      { path: 'inventory/nuevo-componente', element: <EquipmentForm mode="component" /> },
-      { path: 'inventory/:id', element: <ProductDetail /> },
-      { path: 'inventory/componente/:id', element: <ComponentDetail /> },
-      { path: 'equipment-status', element: <EquipmentStatus /> },
-      { path: 'tickets', element: <TicketList /> },
+      { path: "inventory", element: <InventoryPage /> },
+      { path: "inventory/nuevo", element: <EquipmentForm mode="product" /> },
+      { path: "inventory/nuevo-componente", element: <EquipmentForm mode="component" /> },
+      { path: "inventory/:id", element: <ProductDetail /> },
+      { path: "inventory/componente/:id", element: <ComponentDetail /> },
+      { path: "equipment-status", element: <EquipmentStatus /> },
+      { path: "tickets", element: <TicketList /> },
       {
-        path: 'tickets/:id',
+        path: "tickets/:id",
         element: (
-          <ProtectedRoute roles={['root_admin', 'admin', 'tecnico']}>
+          <ProtectedRoute roles={["root_admin", "admin", "tecnico"]}>
             <TicketDetail />
           </ProtectedRoute>
         ),
       },
       {
-        path: 'tickets/ool',
+        path: "tickets/ool",
         element: (
-          <ProtectedRoute roles={['root_admin', 'admin', 'tecnico']}>
+          <ProtectedRoute roles={["root_admin", "admin", "tecnico"]}>
             <OolList />
           </ProtectedRoute>
         ),
       },
       {
-        path: 'loans',
+        path: "loans",
         element: (
-          <ProtectedRoute roles={['root_admin', 'admin', 'tecnico']}>
+          <ProtectedRoute roles={["root_admin", "admin", "tecnico"]}>
             <LoansPage />
           </ProtectedRoute>
         ),
       },
-      { path: 'service-requests', element: <ServiceList /> },
+      { path: "service-requests", element: <ServiceList /> },
       {
-        path: 'service-requests/:id',
+        path: "service-requests/:id",
         element: (
-          <ProtectedRoute roles={['root_admin', 'admin', 'tecnico']}>
+          <ProtectedRoute roles={["root_admin", "admin", "tecnico"]}>
             <ServiceDetail />
           </ProtectedRoute>
         ),
       },
-      { path: 'profile', element: <ProfilePage /> },
+      { path: "profile", element: <ProfilePage /> },
     ],
   },
 
   {
-    path: '/admin',
+    path: "/admin",
     element: (
-      <ProtectedRoute roles={['root_admin', 'admin']}>
+      <ProtectedRoute roles={["root_admin", "admin"]}>
         <AdminLayout />
       </ProtectedRoute>
     ),
     children: [
       { index: true, element: <AdminDashboard /> },
-      { path: 'users', element: <UserManagement /> },
-      { path: 'roles', element: <RolesConfig /> },
-      { path: 'logs', element: <ActivityLog /> },
+      { path: "users", element: <UserManagement /> },
+      { path: "roles", element: <RolesConfig /> },
+      { path: "logs", element: <ActivityLog /> },
     ],
   },
 
   {
-    path: '*',
+    path: "*",
     element: <Navigate to={ROUTES.NOT_FOUND} replace />,
   },
 ]);

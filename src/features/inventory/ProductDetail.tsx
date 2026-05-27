@@ -1,15 +1,15 @@
-import { useParams, Link } from 'react-router-dom';
-import { motion } from 'motion/react';
-import { ArrowLeft, Edit2, Trash2 } from 'lucide-react';
-import { useAsync } from '@/hooks/useSkeleton';
-import { useAuth } from '@/hooks/useAuth';
-import { gql, formatDate } from '@/lib/utils';
-import { EQUIPMENT_STATUS_CONFIG, ROUTES } from '@/lib/constants';
-import type { Product } from '@/lib/types';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { TableSkeleton } from '@/components/skeletons/TableSkeleton';
+import { useParams, Link } from "react-router-dom";
+import { motion } from "motion/react";
+import { ArrowLeft, Edit2, Trash2 } from "lucide-react";
+import { useAsync } from "@/hooks/useSkeleton";
+import { useAuth } from "@/hooks/useAuth";
+import { gql, formatDate } from "@/lib/utils";
+import { EQUIPMENT_STATUS_CONFIG, ROUTES } from "@/lib/constants";
+import type { Product } from "@/lib/types";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { TableSkeleton } from "@/components/skeletons/TableSkeleton";
 
 const PRODUCT_QUERY = `
   query GetProduct($id: ID!) {
@@ -24,8 +24,10 @@ const PRODUCT_QUERY = `
 function DetailRow({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-0.5">
-      <span className="text-xs text-muted-foreground uppercase tracking-widest font-medium">{label}</span>
-      <span className="text-sm text-foreground">{value ?? '—'}</span>
+      <span className="text-xs text-muted-foreground uppercase tracking-widest font-medium">
+        {label}
+      </span>
+      <span className="text-sm text-foreground">{value ?? "—"}</span>
     </div>
   );
 }
@@ -35,11 +37,11 @@ export function ProductDetail() {
   const { hasRole } = useAuth();
   const { data, isLoading, error } = useAsync<{ product: Product | null }>(
     () => gql(PRODUCT_QUERY, { id }),
-    [id]
+    [id],
   );
 
   const product = data?.product;
-  const canEdit = hasRole('root_admin', 'admin', 'tecnico');
+  const canEdit = hasRole("root_admin", "admin", "tecnico");
 
   return (
     <div className="space-y-6 max-w-4xl">
@@ -54,7 +56,7 @@ export function ProductDetail() {
             <div className="h-6 w-48 bg-muted rounded animate-pulse" />
           ) : (
             <h1 className="text-xl font-semibold tracking-tight text-foreground">
-              {product ? `${product.brand} ${product.model}` : 'Equipo no encontrado'}
+              {product ? `${product.brand} ${product.model}` : "Equipo no encontrado"}
             </h1>
           )}
         </div>
@@ -100,7 +102,7 @@ export function ProductDetail() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
           className="space-y-6"
         >
           <Card>
@@ -117,8 +119,14 @@ export function ProductDetail() {
                 <DetailRow label="Tipo" value={product.kind} />
                 <DetailRow label="Marca" value={product.brand} />
                 <DetailRow label="Modelo" value={product.model} />
-                <DetailRow label="N° de serie" value={<span className="font-mono text-xs">{product.serialNumber}</span>} />
-                <DetailRow label="Part number" value={<span className="font-mono text-xs">{product.partNumber}</span>} />
+                <DetailRow
+                  label="N° de serie"
+                  value={<span className="font-mono text-xs">{product.serialNumber}</span>}
+                />
+                <DetailRow
+                  label="Part number"
+                  value={<span className="font-mono text-xs">{product.partNumber}</span>}
+                />
                 <DetailRow label="Ubicación" value={product.location} />
                 <DetailRow label="Registrado" value={formatDate(product.createdAt)} />
                 <DetailRow label="Actualizado" value={formatDate(product.updatedAt)} />
@@ -146,20 +154,49 @@ export function ProductDetail() {
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-border">
-                        {['Componente', 'Modelo', 'Fabricante', 'Serie', 'De fábrica', 'Funciona'].map(h => (
-                          <th key={h} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-widest text-muted-foreground">{h}</th>
+                        {[
+                          "Componente",
+                          "Modelo",
+                          "Fabricante",
+                          "Serie",
+                          "De fábrica",
+                          "Funciona",
+                        ].map((h) => (
+                          <th
+                            key={h}
+                            className="px-4 py-3 text-left text-xs font-medium uppercase tracking-widest text-muted-foreground"
+                          >
+                            {h}
+                          </th>
                         ))}
                       </tr>
                     </thead>
                     <tbody>
-                      {product.components.map(c => (
-                        <tr key={c.id} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
-                          <td className="px-4 py-3 text-sm font-medium text-foreground">{c.name}</td>
+                      {product.components.map((c) => (
+                        <tr
+                          key={c.id}
+                          className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors"
+                        >
+                          <td className="px-4 py-3 text-sm font-medium text-foreground">
+                            {c.name}
+                          </td>
                           <td className="px-4 py-3 text-sm text-muted-foreground">{c.model}</td>
-                          <td className="px-4 py-3 text-sm text-muted-foreground">{c.manufacturer}</td>
-                          <td className="px-4 py-3 text-xs text-muted-foreground font-mono">{c.serialNumber}</td>
-                          <td className="px-4 py-3"><Badge color={c.isFactory ? 'success' : 'muted'}>{c.isFactory ? 'Sí' : 'No'}</Badge></td>
-                          <td className="px-4 py-3"><Badge color={c.isWorking ? 'success' : 'destructive'}>{c.isWorking ? 'Sí' : 'No'}</Badge></td>
+                          <td className="px-4 py-3 text-sm text-muted-foreground">
+                            {c.manufacturer}
+                          </td>
+                          <td className="px-4 py-3 text-xs text-muted-foreground font-mono">
+                            {c.serialNumber}
+                          </td>
+                          <td className="px-4 py-3">
+                            <Badge color={c.isFactory ? "success" : "muted"}>
+                              {c.isFactory ? "Sí" : "No"}
+                            </Badge>
+                          </td>
+                          <td className="px-4 py-3">
+                            <Badge color={c.isWorking ? "success" : "destructive"}>
+                              {c.isWorking ? "Sí" : "No"}
+                            </Badge>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -169,8 +206,10 @@ export function ProductDetail() {
             </CardContent>
           </Card>
         </motion.div>
-      ) : !isLoading && (
-        <div className="text-center py-16 text-muted-foreground">Equipo no encontrado</div>
+      ) : (
+        !isLoading && (
+          <div className="text-center py-16 text-muted-foreground">Equipo no encontrado</div>
+        )
       )}
     </div>
   );

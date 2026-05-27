@@ -1,8 +1,8 @@
-import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { X } from 'lucide-react';
-import { type ComponentPropsWithoutRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { cn } from '@/lib/utils';
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
+import { type ComponentPropsWithoutRef } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { cn } from "@/lib/utils";
 
 const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;
@@ -15,7 +15,7 @@ function DialogOverlay({
 }: ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>) {
   return (
     <DialogPrimitive.Overlay
-      className={cn('fixed inset-0 z-50 bg-foreground/25 backdrop-blur-[6px]', className)}
+      className={cn("fixed inset-0 z-50 bg-foreground/25 backdrop-blur-[6px]", className)}
       {...props}
     />
   );
@@ -34,12 +34,12 @@ function DialogContent({
           initial={{ opacity: 0, scale: 0.96, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 12 }}
-          transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+          transition={{ type: "spring", stiffness: 350, damping: 28 }}
           className={cn(
-            'fixed left-[50%] top-[50%] z-50 w-full max-w-lg translate-x-[-50%] translate-y-[-50%]',
-            'rounded-2xl border border-border/50 bg-popover/85 p-6 shadow-2xl backdrop-blur-3xl',
-            'focus:outline-none focus:ring-0',
-            className
+            "fixed left-[50%] top-[50%] z-50 w-full max-w-lg translate-x-[-50%] translate-y-[-50%]",
+            "rounded-2xl border border-border/50 bg-popover/85 p-6 shadow-2xl backdrop-blur-3xl",
+            "focus:outline-none focus:ring-0",
+            className,
           )}
         >
           {children}
@@ -54,7 +54,12 @@ function DialogContent({
 }
 
 function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('flex flex-col gap-2 mb-5 border-b border-border/20 pb-4', className)} {...props} />;
+  return (
+    <div
+      className={cn("flex flex-col gap-2 mb-5 border-b border-border/20 pb-4", className)}
+      {...props}
+    />
+  );
 }
 
 function DialogTitle({
@@ -63,7 +68,7 @@ function DialogTitle({
 }: ComponentPropsWithoutRef<typeof DialogPrimitive.Title>) {
   return (
     <DialogPrimitive.Title
-      className={cn('text-lg font-bold tracking-tight text-foreground/90', className)}
+      className={cn("text-lg font-bold tracking-tight text-foreground/90", className)}
       {...props}
     />
   );
@@ -75,7 +80,7 @@ function DialogDescription({
 }: ComponentPropsWithoutRef<typeof DialogPrimitive.Description>) {
   return (
     <DialogPrimitive.Description
-      className={cn('text-sm text-muted-foreground font-medium', className)}
+      className={cn("text-sm text-muted-foreground font-medium", className)}
       {...props}
     />
   );
@@ -83,7 +88,13 @@ function DialogDescription({
 
 function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn('flex items-center justify-end gap-2 mt-6 border-t border-border/20 pt-4', className)} {...props} />
+    <div
+      className={cn(
+        "flex items-center justify-end gap-2 mt-6 border-t border-border/20 pt-4",
+        className,
+      )}
+      {...props}
+    />
   );
 }
 

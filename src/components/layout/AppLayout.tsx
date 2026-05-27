@@ -1,9 +1,9 @@
-import { Outlet, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'motion/react';
-import { Sidebar } from './Sidebar';
-import { Topbar } from './Topbar';
-import { TabBar } from './TabBar';
-import { PAGE_TRANSITION } from '@/lib/constants';
+import { Outlet, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "motion/react";
+import { Sidebar } from "./Sidebar";
+import { Topbar } from "./Topbar";
+import { TabBar } from "./TabBar";
+import { PAGE_TRANSITION } from "@/lib/constants";
 
 export function AppLayout() {
   const location = useLocation();

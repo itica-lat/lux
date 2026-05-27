@@ -1,9 +1,9 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, Settings, Shield } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { ThemeSwitcher } from '@/components/accessibility/ThemeSwitcher';
-import { FontSizeControl } from '@/components/accessibility/FontSizeControl';
+import { Link, useNavigate } from "react-router-dom";
+import { LogOut, Settings, Shield } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ThemeSwitcher } from "@/components/accessibility/ThemeSwitcher";
+import { FontSizeControl } from "@/components/accessibility/FontSizeControl";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,15 +11,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { ROUTES, ROLE_LABELS } from '@/lib/constants';
+} from "@/components/ui/dropdown-menu";
+import { ROUTES, ROLE_LABELS } from "@/lib/constants";
 
 function initials(name: string): string {
   return name
-    .split(' ')
+    .split(" ")
     .slice(0, 2)
-    .map(n => n[0])
-    .join('')
+    .map((n) => n[0])
+    .join("")
     .toUpperCase();
 }
 
@@ -47,7 +47,7 @@ export function Topbar() {
                 </Avatar>
                 <div className="hidden sm:flex flex-col items-start">
                   <span className="text-xs font-medium text-foreground leading-none">
-                    {user.name.split(' ')[0]}
+                    {user.name.split(" ")[0]}
                   </span>
                   <span className="text-[10px] text-muted-foreground leading-none mt-0.5">
                     {ROLE_LABELS[user.role]}
@@ -58,7 +58,9 @@ export function Topbar() {
             <DropdownMenuContent align="end" className="w-52">
               <DropdownMenuLabel>
                 <div className="flex flex-col">
-                  <span className="font-semibold text-foreground text-xs normal-case tracking-normal">{user.name}</span>
+                  <span className="font-semibold text-foreground text-xs normal-case tracking-normal">
+                    {user.name}
+                  </span>
                   <span className="font-normal text-muted-foreground">{user.email}</span>
                 </div>
               </DropdownMenuLabel>
@@ -69,7 +71,7 @@ export function Topbar() {
                   Perfil
                 </Link>
               </DropdownMenuItem>
-              {hasRole('root_admin', 'admin') && (
+              {hasRole("root_admin", "admin") && (
                 <DropdownMenuItem asChild>
                   <Link to={ROUTES.ADMIN} className="flex items-center gap-2">
                     <Shield className="h-4 w-4" />

@@ -1,13 +1,6 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  useEffect,
-  type ReactNode,
-} from 'react';
-import { createElement } from 'react';
-import type { FontSize, ThemeSettings } from '@/lib/types';
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
+import { createElement } from "react";
+import type { FontSize, ThemeSettings } from "@/lib/types";
 
 interface ThemeContextType extends ThemeSettings {
   toggleTheme: () => void;
@@ -18,7 +11,7 @@ interface ThemeContextType extends ThemeSettings {
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
-const STORAGE_KEY = 'lux_theme';
+const STORAGE_KEY = "lux_theme";
 
 function loadSettings(): ThemeSettings {
   try {
@@ -27,19 +20,19 @@ function loadSettings(): ThemeSettings {
   } catch {
     // ignore
   }
-  return { theme: 'light', fontSize: 'md', highContrast: false, dyslexicFont: false };
+  return { theme: "light", fontSize: "md", highContrast: false, dyslexicFont: false };
 }
 
 function applySettings(settings: ThemeSettings): void {
   const html = document.documentElement;
-  if (settings.theme === 'dark') {
-    html.classList.add('dark');
+  if (settings.theme === "dark") {
+    html.classList.add("dark");
   } else {
-    html.classList.remove('dark');
+    html.classList.remove("dark");
   }
-  html.setAttribute('data-font-size', settings.fontSize);
-  html.setAttribute('data-contrast', settings.highContrast ? 'high' : 'normal');
-  html.setAttribute('data-dyslexic', String(settings.dyslexicFont));
+  html.setAttribute("data-font-size", settings.fontSize);
+  html.setAttribute("data-contrast", settings.highContrast ? "high" : "normal");
+  html.setAttribute("data-dyslexic", String(settings.dyslexicFont));
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
@@ -51,19 +44,19 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [settings]);
 
   const toggleTheme = useCallback(() => {
-    setSettings(s => ({ ...s, theme: s.theme === 'light' ? 'dark' : 'light' }));
+    setSettings((s) => ({ ...s, theme: s.theme === "light" ? "dark" : "light" }));
   }, []);
 
   const setFontSize = useCallback((size: FontSize) => {
-    setSettings(s => ({ ...s, fontSize: size }));
+    setSettings((s) => ({ ...s, fontSize: size }));
   }, []);
 
   const toggleHighContrast = useCallback(() => {
-    setSettings(s => ({ ...s, highContrast: !s.highContrast }));
+    setSettings((s) => ({ ...s, highContrast: !s.highContrast }));
   }, []);
 
   const toggleDyslexicFont = useCallback(() => {
-    setSettings(s => ({ ...s, dyslexicFont: !s.dyslexicFont }));
+    setSettings((s) => ({ ...s, dyslexicFont: !s.dyslexicFont }));
   }, []);
 
   return createElement(
@@ -77,12 +70,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         toggleDyslexicFont,
       },
     },
-    children
+    children,
   );
 }
 
 export function useTheme(): ThemeContextType {
   const ctx = useContext(ThemeContext);
-  if (!ctx) throw new Error('useTheme must be used within ThemeProvider');
+  if (!ctx) throw new Error("useTheme must be used within ThemeProvider");
   return ctx;
 }
