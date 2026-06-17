@@ -15,7 +15,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 const PRODUCTS_QUERY = `
   query GetProducts($status: String, $location: String) {
     products(status: $status, location: $location) {
-      id type kind brand model serialNumber partNumber status issues location
+      id type machineId kind brand model serialNumber partNumber status issues location
       components { id name model manufacturer serialNumber partNumber isFactory isWorking }
       createdAt updatedAt deletedAt
     }
@@ -187,7 +187,11 @@ export function InventoryPage() {
                             <p className="text-sm font-semibold text-foreground">
                               {p.brand} {p.model}
                             </p>
-                            <p className="text-xs text-muted-foreground font-medium">{p.kind}</p>
+                            <p className="text-xs text-muted-foreground font-medium">
+                              <span className="font-mono text-primary">{p.machineId}</span>
+                              {" · "}
+                              {p.kind}
+                            </p>
                           </Link>
                         </td>
                         <td className="px-6 py-4 text-xs text-muted-foreground font-mono">

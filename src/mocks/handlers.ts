@@ -74,6 +74,12 @@ export const handlers = [
     return HttpResponse.json({ data: { product } });
   }),
 
+  graphql.query("GetProductByMachineId", ({ variables }) => {
+    const { machineId } = variables as { machineId: string };
+    const product = mockProducts.find((p) => p.machineId === machineId && p.deletedAt === null) ?? null;
+    return HttpResponse.json({ data: { productByMachineId: product } });
+  }),
+
   graphql.query("GetComponents", ({ variables }) => {
     const { productId, isWorking } = variables as { productId?: string; isWorking?: boolean };
     let components = mockComponents.filter((c) => c.deletedAt === null);
@@ -428,6 +434,7 @@ export const handlers = [
   graphql.mutation("CreateProduct", ({ variables }) => {
     const { input } = variables as {
       input: {
+        machineId: string;
         kind: string;
         brand: string;
         model: string;

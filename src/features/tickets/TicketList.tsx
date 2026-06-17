@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Search, AlertCircle } from "lucide-react";
+import { Plus, Search, AlertCircle, Camera } from "lucide-react";
 import { useAsync } from "@/hooks/useSkeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { gql, formatDate, truncate, cn } from "@/lib/utils";
 import { TICKET_STATUS_CONFIG, TICKET_CATEGORY_LABELS, ROUTES } from "@/lib/constants";
-import type { Ticket, TicketStatus } from "@/lib/types";
+import type { Ticket, TicketStatus, Product } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { QrScanner } from "@/components/ui/QrScanner";
 
 const TICKETS_QUERY = `
   query GetTickets($submittedById: ID) {
@@ -35,6 +36,14 @@ const TICKETS_QUERY = `
       submittedBy { id name }
       assignedTo { id name }
       equipmentId createdAt updatedAt
+    }
+  }
+`;
+
+const PRODUCTS_QUERY = `
+  query GetProducts {
+    products {
+      id machineId kind brand model location status
     }
   }
 `;
@@ -50,6 +59,7 @@ export function TicketList() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<TicketStatus | "">("");
   const [createOpen, setCreateOpen] = useState(false);
+  const [scannerOpen, setScannerOpen] = useState(false);
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -57,6 +67,7 @@ export function TicketList() {
     equipmentId: "",
   });
   const [saving, setSaving] = useState(false);
+  const [machineSearch, setMachineSearch] = useState("");
 
   const isSolicitante = !hasRole("root_admin", "admin", "tecnico");
 
@@ -64,6 +75,23 @@ export function TicketList() {
     () => gql(TICKETS_QUERY, { submittedById: isSolicitante ? user?.id : undefined }),
     [isSolicitante, user?.id],
   );
+
+  const { data: productsData } = useAsync<{ products: Product[] }>(
+    () => gql(PRODUCTS_QUERY),
+    [],
+  );
+
+  const products = productsData?.products ?? [];
+
+  const selectedProduct = products.find((p) => p.id === form.equipmentId) ?? null;
+
+  const filteredProducts = machineSearch
+    ? products.filter(
+        (p) =>
+          p.machineId.toLowerCase().includes(machineSearch.toLowerCase()) ||
+          `${p.brand} ${p.model}`.toLowerCase().includes(machineSearch.toLowerCase()),
+      )
+    : products;
 
   const tickets = (data?.tickets ?? []).filter((t) => {
     const matchSearch = !search || t.title.toLowerCase().includes(search.toLowerCase());
@@ -85,13 +113,20 @@ export function TicketList() {
       });
       setCreateOpen(false);
       setForm({ title: "", description: "", category: "hardware", equipmentId: "" });
+      setMachineSearch("");
       refetch();
     } finally {
       setSaving(false);
     }
   };
 
-  // Skeletons are shown ONLY on first mount (when we don't have list data yet)
+  const handleQrScan = (machineId: string) => {
+    const product = products.find((p) => p.machineId === machineId);
+    if (product) {
+      setForm((f) => ({ ...f, equipmentId: product.id }));
+    }
+  };
+
   const showSkeleton = isLoading && !data;
 
   return (
@@ -121,7 +156,7 @@ export function TicketList() {
 
       <div className="flex gap-3 flex-wrap">
         <div className="relative flex-1 min-w-[200px] max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute z-10 left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Buscar tickets..."
             value={search}
@@ -264,6 +299,73 @@ export function TicketList() {
                     </SelectContent>
                   </Select>
                 </div>
+                <div className="space-y-1.5">
+                  <Label>Equipo (opcional)</Label>
+                  <div className="flex gap-2">
+                    <div className="flex-1 relative">
+                      <Input
+                        placeholder="Buscar por ID o nombre..."
+                        value={
+                          selectedProduct
+                            ? `${selectedProduct.machineId} · ${selectedProduct.brand} ${selectedProduct.model}`
+                            : machineSearch
+                        }
+                        onChange={(e) => {
+                          setMachineSearch(e.target.value);
+                          if (!e.target.value) setForm((f) => ({ ...f, equipmentId: "" }));
+                        }}
+                        onFocus={() => {
+                          if (selectedProduct) {
+                            setForm((f) => ({ ...f, equipmentId: "" }));
+                            setMachineSearch("");
+                          }
+                        }}
+                      />
+                      {machineSearch && !selectedProduct && filteredProducts.length > 0 && (
+                        <div className="absolute z-50 bottom-full mb-1 left-0 right-0 bg-popover border border-border rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                          {filteredProducts.slice(0, 8).map((p) => (
+                            <button
+                              key={p.id}
+                              type="button"
+                              className="w-full text-left px-3 py-2 text-sm hover:bg-muted/50 transition-colors flex items-center gap-2"
+                              onClick={() => {
+                                setForm((f) => ({ ...f, equipmentId: p.id }));
+                                setMachineSearch("");
+                              }}
+                            >
+                              <span className="font-mono text-xs text-primary font-semibold">
+                                {p.machineId}
+                              </span>
+                              <span className="text-muted-foreground">
+                                {p.brand} {p.model}
+                              </span>
+                              <span className="ml-auto text-xs text-muted-foreground">
+                                {p.location}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="icon"
+                      onClick={() => setScannerOpen(true)}
+                      title="Escanear QR"
+                    >
+                      <Camera className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  {selectedProduct && (
+                    <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-1">
+                      <span className="font-mono text-primary font-semibold">
+                        {selectedProduct.machineId}
+                      </span>
+                      · {selectedProduct.location} · {selectedProduct.kind}
+                    </p>
+                  )}
+                </div>
               </div>
               <DialogFooter>
                 <Button variant="secondary" onClick={() => setCreateOpen(false)}>
@@ -277,6 +379,12 @@ export function TicketList() {
           </Dialog>
         )}
       </AnimatePresence>
+
+      <QrScanner
+        open={scannerOpen}
+        onOpenChange={setScannerOpen}
+        onScan={handleQrScan}
+      />
     </div>
   );
 }

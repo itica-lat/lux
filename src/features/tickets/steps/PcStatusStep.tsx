@@ -35,11 +35,15 @@ export function PcStatusStep({ ticket }: PcStatusStepProps) {
       <div>
         <h2 className="text-base font-semibold text-foreground mb-1">Estado del equipo</h2>
         <p className="text-xs text-muted-foreground">
-          {equipment.location} · {equipment.serialNumber}
+          {equipment.machineId} · {equipment.location} · {equipment.serialNumber}
         </p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
+        <Row
+          label="ID de máquina"
+          value={<span className="font-mono font-semibold text-primary">{equipment.machineId}</span>}
+        />
         <Row label="Ubicación" value={equipment.location} />
         <Row label="Estado" value={<Badge color={statusConf.color}>{statusConf.label}</Badge>} />
         <Row label="Tipo" value={equipment.kind} />

@@ -6,6 +6,7 @@ export const schema = `
     user(id: ID!): User
     products(status: String, location: String, deletedAt: String): [Product!]!
     product(id: ID!): Product
+    productByMachineId(machineId: String!): Product
     components(productId: ID, isWorking: Boolean): [Component!]!
     component(id: ID!): Component
     tickets(status: String, assignedToId: ID, submittedById: ID): [Ticket!]!
@@ -69,6 +70,7 @@ export const schema = `
   type Product {
     id: ID!
     type: String!
+    machineId: String!
     kind: String!
     brand: String!
     model: String!
@@ -186,6 +188,7 @@ export const schema = `
   }
 
   input ProductInput {
+    machineId: String!
     kind: String!
     brand: String!
     model: String!

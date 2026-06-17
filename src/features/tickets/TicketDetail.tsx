@@ -17,7 +17,7 @@ const TICKET_QUERY = `
  submittedBy { id name email role }
  assignedTo { id name }
  equipmentId
- equipment { id type kind brand model serialNumber partNumber status issues location components { id name model manufacturer serialNumber partNumber isFactory isWorking } updatedAt createdAt deletedAt }
+ equipment { id type machineId kind brand model serialNumber partNumber status issues location components { id name model manufacturer serialNumber partNumber isFactory isWorking } updatedAt createdAt deletedAt }
  diagnosis corrected actionsTaken
  createdAt updatedAt resolvedAt
  }
