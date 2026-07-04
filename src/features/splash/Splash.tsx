@@ -6,13 +6,13 @@ import { ROUTES } from "@/lib/constants";
 import { useAuth } from "@/hooks/useAuth";
 
 export function Splash() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Navegacion del panel
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate(isAuthenticated ? ROUTES.DASHBOARD : ROUTES.LOGIN, { replace: true });
-    }, 1800);
+    }, 1800); // Timer con verificacion de autenticacion y redireccionamiento a dashboard o login
     return () => clearTimeout(timer);
   }, [navigate, isAuthenticated]);
 

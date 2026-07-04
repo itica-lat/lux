@@ -28,7 +28,7 @@ const TICKET_COLORS: Record<TicketStatus, string> = {
   in_progress: "rgb(0,122,255)",
   in_resolution: "rgb(255,159,10)",
   resolved: "rgb(52,199,89)",
-};
+}; // Seteo de colores de tickets
 
 interface MetricCardProps {
   icon: React.ElementType;
@@ -56,26 +56,26 @@ function MetricCard({ icon: Icon, label, value, color }: MetricCardProps) {
 
 export function DashboardPage() {
   const { user, hasRole } = useAuth();
-  const [period] = useState("7d");
+  const [period] = useState("7d"); // Seteo de periodo de datos
   const { data, isLoading, error } = useAsync<{ dashboardStats: DashboardStats }>(
     () => gql(DASHBOARD_QUERY, { period }),
     [period],
-  );
+  ); // Obtencion de datos con la API mediante async
 
-  const stats = data?.dashboardStats;
+  const stats = data?.dashboardStats; // Seteo de variable con informacion de estadisticas del dashboard (si existe)
 
   const pieData =
     stats?.ticketsByStatus.map((t) => ({
       name: TICKET_STATUS_CONFIG[t.status as TicketStatus].label,
       value: t.count,
       color: TICKET_COLORS[t.status as TicketStatus],
-    })) ?? [];
+    })) ?? []; // Informacion de la grafica Pie
 
   const barData =
     stats?.servicesByPeriod.map((s) => ({
       label: s.date.slice(5),
       value: s.count,
-    })) ?? [];
+    })) ?? []; // Informacion de la grafica de barras
 
   // Show full skeletons ONLY on first load (when we don't have stats yet)
   const isInitialLoading = isLoading && !stats;

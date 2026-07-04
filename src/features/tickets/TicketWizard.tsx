@@ -15,7 +15,7 @@ const COMPLETE_TICKET_MUTATION = `
  mutation CompleteTicket($id: ID!, $input: TicketCompleteInput!) {
  completeTicket(id: $id, input: $input) { id status }
  }
-`;
+`; // Mutacion del ticket una vez completaod
 
 const steps = [
   { id: "incident", label: "Incidente" },
@@ -23,13 +23,13 @@ const steps = [
   { id: "pc-history", label: "Historial" },
   { id: "diagnosis", label: "Diagnóstico" },
   { id: "summary", label: "Resumen" },
-];
+]; // Pasos que ocurren dentro del flujo del ticket
 
 interface TicketWizardProps {
   ticket: Ticket;
   onComplete: () => void;
   canComplete: boolean;
-}
+} // Interfaz del ticket con sus props
 
 export function TicketWizard({ ticket, onComplete, canComplete }: TicketWizardProps) {
   const [currentStep, setCurrentStep] = useState(0);
@@ -39,7 +39,7 @@ export function TicketWizard({ ticket, onComplete, canComplete }: TicketWizardPr
   const [completing, setCompleting] = useState(false);
   const [completed, setCompleted] = useState(ticket.status === "resolved");
 
-  const isResolved = ticket.status === "resolved" || completed;
+  const isResolved = ticket.status === "resolved" || completed; // Verificacion si esta resuelto o no
 
   const handleComplete = async () => {
     if (!diagnosis || corrected === null) return;
@@ -56,7 +56,7 @@ export function TicketWizard({ ticket, onComplete, canComplete }: TicketWizardPr
     } finally {
       setCompleting(false);
     }
-  };
+  }; // Flujo completo cuando se esta marcando como completado
 
   const renderStep = () => {
     switch (currentStep) {
@@ -91,7 +91,7 @@ export function TicketWizard({ ticket, onComplete, canComplete }: TicketWizardPr
       default:
         return null;
     }
-  };
+  }; // Flujo de renderizado del ticket
 
   return (
     <div className="flex gap-8 min-h-[500px]">

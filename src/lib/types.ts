@@ -9,10 +9,10 @@ export interface User {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
-}
+} // Interfaces de usuario
 
-export type EquipmentStatus = "available" | "in_use" | "in_repair" | "retired";
-export type Location = "Laboratorios" | "Salones" | "Administración" | "Otros";
+export type EquipmentStatus = "available" | "in_use" | "in_repair" | "retired"; // Estado del equipamiento
+export type Location = "Laboratorios" | "Salones" | "Administración" | "Otros"; // Ubicacion del equipamiento
 
 export interface Product {
   id: string;
@@ -29,7 +29,7 @@ export interface Product {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
-}
+} // Inteface de producto
 
 export interface Component {
   id: string;
@@ -45,12 +45,12 @@ export interface Component {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
-}
+} // Intefaz de componente
 
-export type Equipment = Product | Component;
+export type Equipment = Product | Component; // Tipo de equipamiento (Producto, componente)
 
-export type TicketStatus = "pending" | "in_progress" | "in_resolution" | "resolved";
-export type TicketCategory = "hardware" | "software" | "network" | "other";
+export type TicketStatus = "pending" | "in_progress" | "in_resolution" | "resolved"; // Estado del ticket
+export type TicketCategory = "hardware" | "software" | "network" | "other"; // Categoria del ticket
 
 export interface Ticket {
   id: string;
@@ -68,9 +68,9 @@ export interface Ticket {
   createdAt: string;
   updatedAt: string;
   resolvedAt: string | null;
-}
+} // Interfaz de ticket
 
-export type LoanStatus = "pending" | "approved" | "active" | "overdue" | "returned";
+export type LoanStatus = "pending" | "approved" | "active" | "overdue" | "returned"; // Estado del prestamo
 
 export interface Loan {
   id: string;
@@ -85,10 +85,10 @@ export interface Loan {
   components: Component[];
   createdAt: string;
   updatedAt: string;
-}
+} // Interfaz de prestamo
 
-export type ServiceType = "lab_preparation" | "software_installation" | "equipment_setup" | "other";
-export type ServiceStatus = "pending" | "approved" | "in_progress" | "completed" | "rejected";
+export type ServiceType = "lab_preparation" | "software_installation" | "equipment_setup" | "other"; // Tipo de servicio
+export type ServiceStatus = "pending" | "approved" | "in_progress" | "completed" | "rejected"; // Estadi de servicio
 
 export interface ServiceRequest {
   id: string;
@@ -102,7 +102,7 @@ export interface ServiceRequest {
   resolutionText: string | null;
   createdAt: string;
   updatedAt: string;
-}
+} // Interfaz de servicio
 
 export interface ActivityLog {
   id: string;
@@ -113,7 +113,7 @@ export interface ActivityLog {
   entityId: string;
   timestamp: string;
   details: string | null;
-}
+} // Interfaz de log de auditoria
 
 export interface DashboardStats {
   totalEquipment: number;
@@ -122,25 +122,25 @@ export interface DashboardStats {
   pendingServices: number;
   ticketsByStatus: Array<{ status: TicketStatus; count: number }>;
   servicesByPeriod: Array<{ date: string; count: number }>;
-}
+} // Interfaz de datos del dashboard
 
 export interface AuthUser extends User {
   token: string;
-}
+} // Interfaz de auth user con token de usuario extendiendo usuario
 
-export type FontSize = "sm" | "md" | "lg" | "xl";
-export type Theme = "light" | "dark";
+export type FontSize = "sm" | "md" | "lg" | "xl"; // Tamaños de fuentes
+export type Theme = "light" | "dark"; // Tipos de temas
 
 export interface ThemeSettings {
   theme: Theme;
   fontSize: FontSize;
   highContrast: boolean;
   dyslexicFont: boolean;
-}
+} // Interfaz de settings de tema
 
 export interface GraphQLResponse<T> {
   data: T;
   errors?: Array<{ message: string }>;
-}
+} // GraphQL Interface con respuest
 
 export type Result<T, E = Error> = { ok: true; value: T } | { ok: false; error: E };

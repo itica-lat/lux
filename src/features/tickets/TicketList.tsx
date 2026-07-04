@@ -55,7 +55,7 @@ export function TicketList() {
     description: "",
     category: "hardware",
     equipmentId: "",
-  });
+  }); // Settear formulario con variables: title, desc, category, equipmentId
   const [saving, setSaving] = useState(false);
 
   const isSolicitante = !hasRole("root_admin", "admin", "tecnico");
@@ -63,13 +63,13 @@ export function TicketList() {
   const { data, isLoading, error, refetch } = useAsync<{ tickets: Ticket[] }>(
     () => gql(TICKETS_QUERY, { submittedById: isSolicitante ? user?.id : undefined }),
     [isSolicitante, user?.id],
-  );
+  ); // Obtencion de informacion y refetch de tickets, con obtencion de id, verificacion de solicitante y userid
 
   const tickets = (data?.tickets ?? []).filter((t) => {
     const matchSearch = !search || t.title.toLowerCase().includes(search.toLowerCase());
     const matchStatus = !statusFilter || t.status === statusFilter;
     return matchSearch && matchStatus;
-  });
+  }); // Comprueba que los tickets mostrados matcheen con los filtros
 
   const handleCreate = async () => {
     if (!form.title.trim() || !form.description.trim()) return;
@@ -89,10 +89,10 @@ export function TicketList() {
     } finally {
       setSaving(false);
     }
-  };
+  }; // Funcion que maneja la creacion del ticket
 
-  // Skeletons are shown ONLY on first mount (when we don't have list data yet)
-  const showSkeleton = isLoading && !data;
+
+  const showSkeleton = isLoading && !data; // Muestra del skeleton loading en la primera carga
 
   return (
     <div className="space-y-6 max-w-full">

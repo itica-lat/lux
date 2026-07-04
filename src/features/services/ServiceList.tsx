@@ -20,11 +20,11 @@ const SERVICES_QUERY = `
       createdAt updatedAt
     }
   }
-`;
+`; // Obtencion de datos de servicio para la lista
 
 export function ServiceList() {
-  const { user, hasRole } = useAuth();
-  const [statusFilter, setStatusFilter] = useState<ServiceStatus | "">("");
+  const { user, hasRole } = useAuth(); // Verificacion de roles con Auth
+  const [statusFilter, setStatusFilter] = useState<ServiceStatus | "">(""); // Obtencion de status para filtros
   const [createOpen, setCreateOpen] = useState(false);
 
   const isSolicitante = !hasRole("root_admin", "admin", "tecnico");
@@ -32,14 +32,14 @@ export function ServiceList() {
   const { data, isLoading, refetch } = useAsync<{ serviceRequests: ServiceRequest[] }>(
     () => gql(SERVICES_QUERY, { requestedById: isSolicitante ? user?.id : undefined }),
     [isSolicitante, user?.id],
-  );
+  ); // Fetch y refetch de datos
 
   const services = (data?.serviceRequests ?? []).filter(
     (s) => !statusFilter || s.status === statusFilter,
   );
 
-  // Show full skeleton ONLY on the very first empty load
-  const showSkeleton = isLoading && !data;
+  
+  const showSkeleton = isLoading && !data; //Skeleton cuando se esta cargando y no hay informacion
 
   return (
     <div className="space-y-6 max-w-full">

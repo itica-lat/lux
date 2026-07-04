@@ -14,13 +14,13 @@ const OOL_QUERY = `
  id title category submittedBy { name } createdAt
  }
  }
-`;
+`; // Query para obtener tickets sin asignar (OOL) con id, title, category, submittedBy (name), createdAt
 
 const CLAIM_MUTATION = `
  mutation ClaimTicket($id: ID!) {
  claimTicket(id: $id) { id status }
  }
-`;
+`; // Mutacion de datos cuando esta siendo reclamado por otro miembro
 
 export function OolList() {
   const { data, isLoading, refetch } = useAsync<{ oolTickets: Ticket[] }>(() => gql(OOL_QUERY), []);
@@ -34,7 +34,7 @@ export function OolList() {
     } catch {
       // TODO: toast
     }
-  };
+  }; // Gestiona el claiming del ticket
 
   return (
     <div className="space-y-6 max-w-4xl">

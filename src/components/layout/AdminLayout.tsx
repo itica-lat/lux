@@ -19,7 +19,7 @@ function initials(name: string): string {
     .map((n) => n[0])
     .join("")
     .toUpperCase();
-}
+} // Iniciales del nombre
 
 export function AdminLayout() {
   const { user } = useAuth();

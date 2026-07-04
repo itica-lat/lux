@@ -11,7 +11,7 @@ export function formatDate(iso: string): string {
     month: "2-digit",
     year: "numeric",
   });
-}
+} // Parseo de fechas
 
 export function formatDateTime(iso: string): string {
   return new Date(iso).toLocaleString("es-UY", {
@@ -21,7 +21,7 @@ export function formatDateTime(iso: string): string {
     hour: "2-digit",
     minute: "2-digit",
   });
-}
+} // Parseo de fecha y hora
 
 export function formatRelativeTime(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
@@ -33,7 +33,7 @@ export function formatRelativeTime(iso: string): string {
   if (hours > 0) return `hace ${hours} hora${hours !== 1 ? "s" : ""}`;
   if (minutes > 0) return `hace ${minutes} minuto${minutes !== 1 ? "s" : ""}`;
   return "ahora mismo";
-}
+} // Parseo de tiempo relativo
 
 export async function gql<T>(query: string, variables?: Record<string, unknown>): Promise<T> {
   const response = await fetch("/graphql", {
@@ -57,16 +57,16 @@ export async function gql<T>(query: string, variables?: Record<string, unknown>)
   }
 
   return json.data;
-}
+} // Solicitudes a la API con metodos y gestion de errores
 
 export function generateId(): string {
   return Math.random().toString(36).slice(2) + Date.now().toString(36);
-}
+} // Generacion de ID
 
 export function isOverdue(returnDate: string): boolean {
   return new Date(returnDate) < new Date();
-}
+} // Verificacion si esta fuera de fecha
 
 export function truncate(str: string, max: number): string {
   return str.length > max ? str.slice(0, max) + "…" : str;
-}
+} // Truncado de datos

@@ -10,7 +10,7 @@ const colorMap: Record<BadgeColor, string> = {
   destructive: "bg-destructive/8 text-destructive border-destructive/20 dark:bg-destructive/12",
   muted: "bg-muted text-muted-foreground border-border/70 dark:bg-muted/20",
   default: "bg-primary/6 text-primary border-primary/15 dark:bg-primary/12 dark:text-primary/90",
-};
+}; // Mapa de colores 
 
 const dotColorMap: Record<BadgeColor, string> = {
   success: "bg-success shadow-[0_0_8px_rgba(52,199,89,0.5)]",
@@ -19,12 +19,12 @@ const dotColorMap: Record<BadgeColor, string> = {
   destructive: "bg-destructive shadow-[0_0_8px_rgba(202,44,33,0.5)]",
   muted: "bg-muted-foreground/60",
   default: "bg-primary/80",
-};
+}; // Clases de tailwind para los colores de los puntos
 
 interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   color?: BadgeColor;
   withDot?: boolean;
-}
+} // Interfaz Props de badges 
 
 function Badge({ className, color = "default", withDot = false, children, ...props }: BadgeProps) {
   return (

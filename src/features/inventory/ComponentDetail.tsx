@@ -41,7 +41,7 @@ export function ComponentDetail() {
   const canEdit = hasRole("root_admin", "admin", "tecnico");
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-6 max-w-full">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" asChild>
           <Link to={ROUTES.INVENTORY}>

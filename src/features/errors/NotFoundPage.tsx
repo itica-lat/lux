@@ -32,3 +32,5 @@ export function NotFoundPage() {
     </div>
   );
 }
+
+// Pagina de error 404 

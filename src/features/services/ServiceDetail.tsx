@@ -28,28 +28,28 @@ const SERVICE_QUERY = `
  createdAt updatedAt
  }
  }
-`;
+`; // Query para service ID, status, description, labNumber, softwareName, equipmentId, resolutionText, requestedBy (id, name, email), createdAt, updatedAt
 
 const UPDATE_SERVICE_MUTATION = `
  mutation UpdateServiceRequest($id: ID!, $input: ServiceRequestUpdateInput!) {
  updateServiceRequest(id: $id, input: $input) { id status }
  }
-`;
+`; // Alteracion del Service
 
 export function ServiceDetail() {
-  const { id } = useParams<{ id: string }>();
-  const { hasRole } = useAuth();
+  const { id } = useParams<{ id: string }>(); // Variable constante ID con parametros String
+  const { hasRole } = useAuth(); // Verificacion de roles con Auth
   const [saving, setSaving] = useState(false);
-  const [newStatus, setNewStatus] = useState<ServiceStatus | "">("");
-  const [resolution, setResolution] = useState("");
+  const [newStatus, setNewStatus] = useState<ServiceStatus | "">(""); // Actualizacion de Estatus con parametro de estado de servicio
+  const [resolution, setResolution] = useState(""); // Setear resolucion y establecer
 
   const { data, isLoading, error, refetch } = useAsync<{ serviceRequest: ServiceRequest | null }>(
     () => gql(SERVICE_QUERY, { id }),
     [id],
-  );
+  ); // Solicitud (Fetch) de servicio por parte del frontend
 
-  const service = data?.serviceRequest;
-  const canManage = hasRole("root_admin", "admin", "tecnico");
+  const service = data?.serviceRequest; // Verificacion e informacion (Si existe) de servicio
+  const canManage = hasRole("root_admin", "admin", "tecnico"); // Verificacion si puede gestionar
 
   const handleUpdate = async () => {
     if (!id || !newStatus) return;
@@ -69,7 +69,7 @@ export function ServiceDetail() {
     } finally {
       setSaving(false);
     }
-  };
+  }; // Actualizacion de servicio (datos)
 
   return (
     <div className="space-y-6 max-w-2xl">

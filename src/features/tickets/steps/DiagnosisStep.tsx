@@ -81,3 +81,5 @@ export function DiagnosisStep({
     </div>
   );
 }
+
+// Export completo de pasos de diagnostico del ticket

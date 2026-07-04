@@ -26,3 +26,5 @@ export function WizardSkeleton() {
     </div>
   );
 }
+
+// Skeleton

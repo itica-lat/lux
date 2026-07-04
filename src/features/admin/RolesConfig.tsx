@@ -44,9 +44,9 @@ const PERMISSIONS: Array<{ label: string; key: string; roles: UserRole[] }> = [
   { label: "Gestionar usuarios", key: "manage_users", roles: ["root_admin", "admin"] },
   { label: "Ver logs de actividad", key: "view_logs", roles: ["root_admin", "admin"] },
   { label: "Exportar datos", key: "export_data", roles: ["root_admin", "admin"] },
-];
+]; // Vista de permisos por roles
 
-const ROLES: UserRole[] = ["root_admin", "admin", "tecnico", "solicitante"];
+const ROLES: UserRole[] = ["root_admin", "admin", "tecnico", "solicitante"]; // Roles que tienen los usuarios en base a props
 
 export function RolesConfig() {
   return (

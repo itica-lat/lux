@@ -16,3 +16,5 @@ export function HighContrastToggle() {
     </Button>
   );
 }
+
+// Boton de logica de contraste alto

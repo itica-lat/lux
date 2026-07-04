@@ -30,7 +30,7 @@ const buttonVariants = cva(
       size: "md",
     },
   },
-);
+); // Variaciones de botones con sus respectivas clases
 
 interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {

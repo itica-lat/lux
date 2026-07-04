@@ -37,13 +37,13 @@ export function UserManagement() {
       u.email.toLowerCase().includes(search.toLowerCase());
     const matchRole = !roleFilter || u.role === roleFilter;
     return matchSearch && matchRole;
-  });
+  }); // Filtrado de usuarios en base a parametros
 
   const handleDelete = async (id: string) => {
     if (!confirm("¿Desactivar este usuario?")) return;
     await gql(DELETE_USER_MUTATION, { id });
     refetch();
-  };
+  }; // Gestion de borrar usuario logicamente
 
   // Show full skeleton ONLY on the very first empty load
   const showSkeleton = isLoading && !data;

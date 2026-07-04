@@ -126,3 +126,5 @@ export const router = createBrowserRouter([
     element: <Navigate to={ROUTES.NOT_FOUND} replace />,
   },
 ]);
+
+// Routeado de paginas y su funcionamiento con middleware

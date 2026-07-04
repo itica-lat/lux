@@ -15,7 +15,7 @@ const LOGS_QUERY = `
  id userId userName operation entity entityId timestamp details
  }
  }
-`;
+`; // Query de logs
 
 const OP_COLORS: Record<string, "success" | "info" | "warning" | "destructive" | "muted"> = {
   CREATE_USER: "success",
@@ -32,7 +32,7 @@ const OP_COLORS: Record<string, "success" | "info" | "warning" | "destructive" |
   CREATE_SERVICE: "info",
   UPDATE_SERVICE: "warning",
   LOGIN: "muted",
-};
+}; // Colores de logs
 
 export function ActivityLog() {
   const [search, setSearch] = useState("");
@@ -48,7 +48,7 @@ export function ActivityLog() {
       l.userName.toLowerCase().includes(search.toLowerCase()) ||
       l.operation.toLowerCase().includes(search.toLowerCase()) ||
       l.entity.toLowerCase().includes(search.toLowerCase()),
-  );
+  ); // Filtrado de informacion 
 
   return (
     <div className="space-y-6">

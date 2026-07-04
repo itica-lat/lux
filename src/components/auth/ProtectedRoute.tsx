@@ -22,3 +22,5 @@ export function ProtectedRoute({ children, roles }: ProtectedRouteProps) {
 
   return <>{children}</>;
 }
+
+// Logica del Middleware para proteccion de rutas

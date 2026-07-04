@@ -22,13 +22,13 @@ const TICKET_QUERY = `
  createdAt updatedAt resolvedAt
  }
  }
-`;
+`; // Obtencion de datos del ticket
 
 const CLAIM_TICKET_MUTATION = `
  mutation ClaimTicket($id: ID!) {
  claimTicket(id: $id) { id status assignedTo { id name } }
  }
-`;
+`; // Mutacion de datos del ticket
 
 export function TicketDetail() {
   const { id } = useParams<{ id: string }>();
@@ -39,11 +39,11 @@ export function TicketDetail() {
     [id],
   );
 
-  const ticket = data?.ticket;
+  const ticket = data?.ticket; // Informacion del ticket, con obtencion condicional (?)
   const canComplete = hasRole("root_admin", "admin", "tecnico");
 
   const handleClaim = async () => {
-    if (!id) return;
+    if (!id) return; // Early return en caso de no cumplir con las condiciones
     try {
       await gql(CLAIM_TICKET_MUTATION, { id });
       refetch();

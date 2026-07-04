@@ -32,3 +32,5 @@ export function ChartSkeleton() {
     </div>
   );
 }
+
+// Skeleton de card

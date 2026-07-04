@@ -33,3 +33,5 @@ export function FontSizeControl() {
 }
 
 export { Button };
+
+// Boton de seleccion de size de fuente

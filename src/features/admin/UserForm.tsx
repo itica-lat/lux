@@ -15,15 +15,16 @@ import {
 
 const CREATE_USER_MUTATION = `
  mutation CreateUser($input: UserInput!) { createUser(input: $input) { id } }
-`;
+`; //Mutacion de usuarios en caso de creacion
+
 const UPDATE_USER_MUTATION = `
  mutation UpdateUser($id: ID!, $input: UserInput!) { updateUser(id: $id, input: $input) { id } }
-`;
+`; // Mutacion de usuarios en caso de actualizacion
 
 interface UserFormProps {
   user?: User;
   onSuccess: () => void;
-}
+} // intefaz de usuario con formulario
 
 export function UserForm({ user, onSuccess }: UserFormProps) {
   const isEdit = !!user;

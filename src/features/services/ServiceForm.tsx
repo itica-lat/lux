@@ -11,29 +11,29 @@ const CREATE_SERVICE_MUTATION = `
  mutation CreateServiceRequest($input: ServiceRequestInput!) {
  createServiceRequest(input: $input) { id }
  }
-`;
+`; // Query, alteracion/creacion de service 
 
 interface ServiceFormProps {
   onSuccess: () => void;
 }
 
 export function ServiceForm({ onSuccess }: ServiceFormProps) {
-  const [type, setType] = useState<ServiceType>("lab_preparation");
+  const [type, setType] = useState<ServiceType>("lab_preparation"); // constante para tipos de service en base a ServiceType
   const [description, setDescription] = useState("");
   const [labNumber, setLabNumber] = useState("");
   const [softwareName, setSoftwareName] = useState("");
   const [equipmentId, setEquipmentId] = useState("");
-  const [saving, setSaving] = useState(false);
+  const [saving, setSaving] = useState(false); // Variable bool que marca si esta siendo guardado o no en el sistema
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // Previene que se dispare el evento por defecto.
     if (!description.trim()) {
       setError("La descripción es requerida.");
       return;
     }
     setSaving(true);
-    setError("");
+    setError(""); // En caso de error si es que hay se marca.
     try {
       await gql(CREATE_SERVICE_MUTATION, {
         input: {
@@ -42,11 +42,11 @@ export function ServiceForm({ onSuccess }: ServiceFormProps) {
           labNumber: type === "lab_preparation" ? labNumber || undefined : undefined,
           softwareName: type === "software_installation" ? softwareName || undefined : undefined,
           equipmentId: type === "equipment_setup" ? equipmentId || undefined : undefined,
-        },
-      });
+        }, // Verificacion de datos con sus respectivos valores o o undefined en caso de no existir.
+      }); // Entrada a la base de datos
       onSuccess();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error al crear solicitud");
+      setError(err instanceof Error ? err.message : "Error al crear solicitud"); // Disparador de error en caso de datos erroneos
     } finally {
       setSaving(false);
     }

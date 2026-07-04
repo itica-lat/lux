@@ -60,13 +60,13 @@ const navItems = [
     to: ROUTES.PROFILE,
     roles: ["root_admin", "admin", "tecnico", "solicitante"] as const,
   },
-];
+]; // Navegacion por el sidebar con iconoos, labels, rutas y roles como constantes de verificacion
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const { user } = useAuth();
 
-  const visibleItems = navItems.filter((item) => user && item.roles.some((r) => r === user.role));
+  const visibleItems = navItems.filter((item) => user && item.roles.some((r) => r === user.role)); // Visibilidad de items en base a roles
 
   return (
     <motion.aside

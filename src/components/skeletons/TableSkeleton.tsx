@@ -34,3 +34,5 @@ export function TableSkeleton({ rows = 6, cols = 5 }: TableSkeletonProps) {
     </div>
   );
 }
+
+// Skeleton de Tabla

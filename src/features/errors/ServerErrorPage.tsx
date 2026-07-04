@@ -37,3 +37,5 @@ export function ServerErrorPage() {
     </div>
   );
 }
+
+// Pagina de 500 por error de servidor

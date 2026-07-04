@@ -10,9 +10,9 @@ interface AuthContextType {
   login: (dni: string, password: string) => Promise<void>;
   logout: () => void;
   hasRole: (...roles: UserRole[]) => boolean;
-}
+} // Interfaz de contexto de autenticacion
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType | null>(null); // Creacion de contexto de auth
 
 const LOGIN_QUERY = `
   query Login($dni: String!, $password: String!) {
@@ -28,7 +28,7 @@ const LOGIN_QUERY = `
       token
     }
   }
-`;
+`; // Login query para comprobacion de datos
 
 interface LoginData {
   login: AuthUser;
@@ -44,7 +44,7 @@ function loadStoredUser(): AuthUser | null {
   } catch {
     return null;
   }
-}
+} // Carga de usuarios almacenados - LocalStorage (provisional)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(loadStoredUser);
@@ -60,12 +60,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, []); // Comprobacion de login y logica
 
   const logout = useCallback(() => {
     setUser(null);
     localStorage.removeItem(STORAGE_KEY);
-  }, []);
+  }, []); // Logica de logout
 
   const hasRole = useCallback(
     (...roles: UserRole[]) => {
@@ -73,17 +73,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return roles.includes(user.role);
     },
     [user],
-  );
+  ); // Comprobacion de rol
 
   return createElement(
     AuthContext.Provider,
     { value: { user, isAuthenticated: user !== null, isLoading, login, logout, hasRole } },
     children,
-  );
+  ); // Creacion de elemento de Auth
 }
 
 export function useAuth(): AuthContextType {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth must be used within AuthProvider");
-  return ctx;
+  return ctx; // Si no hay context Provider no funciona y devuelve el context provider
 }

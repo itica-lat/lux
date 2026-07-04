@@ -16,11 +16,11 @@ const STORAGE_KEY = "lux_theme";
 function loadSettings(): ThemeSettings {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw) as ThemeSettings;
+    if (raw) return JSON.parse(raw) as ThemeSettings; // Parseo de datos de theme y accesibilidad
   } catch {
     // ignore
   }
-  return { theme: "light", fontSize: "md", highContrast: false, dyslexicFont: false };
+  return { theme: "light", fontSize: "md", highContrast: false, dyslexicFont: false }; // En caso de no tener datos se ponen datos por default
 }
 
 function applySettings(settings: ThemeSettings): void {
@@ -33,7 +33,7 @@ function applySettings(settings: ThemeSettings): void {
   html.setAttribute("data-font-size", settings.fontSize);
   html.setAttribute("data-contrast", settings.highContrast ? "high" : "normal");
   html.setAttribute("data-dyslexic", String(settings.dyslexicFont));
-}
+} // Aplicacion de configuracion en base a elementos html mediante tailwind
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<ThemeSettings>(loadSettings);
@@ -41,7 +41,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     applySettings(settings);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-  }, [settings]);
+  }, [settings]); // Utilizando el metodo de useEffect de react se aplican las configuraciones
 
   const toggleTheme = useCallback(() => {
     setSettings((s) => ({ ...s, theme: s.theme === "light" ? "dark" : "light" }));

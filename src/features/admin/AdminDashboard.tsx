@@ -11,11 +11,11 @@ const USERS_QUERY = `query GetUsers { users { id isActive role } }`;
 export function AdminDashboard() {
   const { data } = useAsync<{ users: Array<Pick<User, "id" | "isActive" | "role">> }>(
     () => gql(USERS_QUERY),
-    [],
+    [], // Solicitud a la API
   );
 
-  const users = data?.users ?? [];
-  const activeUsers = users.filter((u) => u.isActive).length;
+  const users = data?.users ?? []; // Extraccion de informacion de usuarios
+  const activeUsers = users.filter((u) => u.isActive).length; // Filtrado por usuarios activos
 
   const cards = [
     {

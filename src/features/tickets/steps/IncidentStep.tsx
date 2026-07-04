@@ -48,3 +48,5 @@ export function IncidentStep({ ticket }: IncidentStepProps) {
     </div>
   );
 }
+
+// Export de datos de diagnostico con props

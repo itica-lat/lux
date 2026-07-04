@@ -35,3 +35,5 @@ export function ForbiddenPage() {
     </div>
   );
 }
+
+// Pagina de error en caso de acceso restringido
