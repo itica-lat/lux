@@ -118,7 +118,8 @@ export function TicketList() {
     } finally {
       setSaving(false);
     }
-  };
+  }; // Funcion que maneja la creacion del ticket
+
 
   const handleQrScan = (machineId: string) => {
     const product = products.find((p) => p.machineId === machineId);
