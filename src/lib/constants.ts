@@ -94,6 +94,31 @@ export const ROLE_LABELS: Record<UserRole, string> = {
 
 export const LOCATIONS: Location[] = ["Laboratorios", "Salones", "Administración", "Otros"];
 
+export const LOCATION_CODES: Record<Location, string> = {
+  Laboratorios: "L",
+  Salones: "S",
+  Administración: "A",
+  Otros: "O",
+};
+
+export const KIND_MACHINE_CODE: Record<string, string> = {
+  AIO: "PC",
+  Desktop: "PC",
+  Laptop: "PC",
+  Servidor: "SRV",
+  Monitor: "MON",
+  Impresora: "IMP",
+  Proyector: "PRY",
+  Switch: "SW",
+  Router: "RTR",
+  UPS: "UPS",
+  Teclado: "PER",
+  Mouse: "PER",
+  Webcam: "PER",
+  Auriculares: "PER",
+  Otro: "EQP",
+};
+
 export const EQUIPMENT_KINDS = [
   "AIO",
   "Desktop",

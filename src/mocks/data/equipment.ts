@@ -187,6 +187,7 @@ export const mockProducts: Product[] = [
   {
     id: "prod-1",
     type: "product",
+    machineId: "L1-PC1",
     kind: "AIO",
     brand: "Dell",
     model: "Inspiron AIO 24",
@@ -203,6 +204,7 @@ export const mockProducts: Product[] = [
   {
     id: "prod-2",
     type: "product",
+    machineId: "L1-PC2",
     kind: "Desktop",
     brand: "HP",
     model: "ProDesk 400 G9",
@@ -219,6 +221,7 @@ export const mockProducts: Product[] = [
   {
     id: "prod-3",
     type: "product",
+    machineId: "A1-PC1",
     kind: "Desktop",
     brand: "Lenovo",
     model: "ThinkCentre M70s",
@@ -235,6 +238,7 @@ export const mockProducts: Product[] = [
   {
     id: "prod-4",
     type: "product",
+    machineId: "A1-PC2",
     kind: "Laptop",
     brand: "HP",
     model: "EliteBook 840 G9",
@@ -251,6 +255,7 @@ export const mockProducts: Product[] = [
   {
     id: "prod-5",
     type: "product",
+    machineId: "L1-PC3",
     kind: "AIO",
     brand: "Lenovo",
     model: "IdeaCentre AIO 3",
@@ -267,6 +272,7 @@ export const mockProducts: Product[] = [
   {
     id: "prod-6",
     type: "product",
+    machineId: "S1-PRY1",
     kind: "Proyector",
     brand: "Epson",
     model: "PowerLite X49",
@@ -283,6 +289,7 @@ export const mockProducts: Product[] = [
   {
     id: "prod-7",
     type: "product",
+    machineId: "S1-PRY2",
     kind: "Proyector",
     brand: "Epson",
     model: "PowerLite X49",
@@ -299,6 +306,7 @@ export const mockProducts: Product[] = [
   {
     id: "prod-8",
     type: "product",
+    machineId: "A1-IMP1",
     kind: "Impresora",
     brand: "HP",
     model: "LaserJet Pro M404dn",
@@ -315,6 +323,7 @@ export const mockProducts: Product[] = [
   {
     id: "prod-9",
     type: "product",
+    machineId: "L1-SW1",
     kind: "Switch",
     brand: "Cisco",
     model: "Catalyst 2960-X",
@@ -331,6 +340,7 @@ export const mockProducts: Product[] = [
   {
     id: "prod-10",
     type: "product",
+    machineId: "L1-UPS1",
     kind: "UPS",
     brand: "APC",
     model: "Back-UPS 1500VA",
@@ -347,6 +357,7 @@ export const mockProducts: Product[] = [
   {
     id: "prod-11",
     type: "product",
+    machineId: "O1-PC1",
     kind: "Desktop",
     brand: "Dell",
     model: "OptiPlex 3090",
@@ -363,6 +374,7 @@ export const mockProducts: Product[] = [
   {
     id: "prod-12",
     type: "product",
+    machineId: "L1-PC4",
     kind: "AIO",
     brand: "HP",
     model: "AIO 24-df1013la",
@@ -379,6 +391,7 @@ export const mockProducts: Product[] = [
   {
     id: "prod-13",
     type: "product",
+    machineId: "L1-PC5",
     kind: "AIO",
     brand: "HP",
     model: "AIO 24-df1013la",
@@ -395,6 +408,7 @@ export const mockProducts: Product[] = [
   {
     id: "prod-14",
     type: "product",
+    machineId: "A1-PC3",
     kind: "Laptop",
     brand: "Lenovo",
     model: "ThinkPad E14 Gen 4",
@@ -411,6 +425,7 @@ export const mockProducts: Product[] = [
   {
     id: "prod-15",
     type: "product",
+    machineId: "L1-RTR1",
     kind: "Router",
     brand: "MikroTik",
     model: "RB4011iGS+RM",

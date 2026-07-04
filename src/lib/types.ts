@@ -17,6 +17,7 @@ export type Location = "Laboratorios" | "Salones" | "Administración" | "Otros";
 export interface Product {
   id: string;
   type: "product";
+  machineId: string;
   kind: string;
   brand: string;
   model: string;

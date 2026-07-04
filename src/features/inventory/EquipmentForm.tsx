@@ -31,6 +31,7 @@ export function EquipmentForm({ mode }: EquipmentFormProps) {
   const [error, setError] = useState("");
 
   const [form, setForm] = useState({
+    machineId: "",
     kind: "AIO",
     brand: "",
     model: "",
@@ -55,6 +56,7 @@ export function EquipmentForm({ mode }: EquipmentFormProps) {
       if (mode === "product") {
         await gql(CREATE_PRODUCT_MUTATION, {
           input: {
+            machineId: form.machineId,
             kind: form.kind,
             brand: form.brand,
             model: form.model,
@@ -138,6 +140,20 @@ export function EquipmentForm({ mode }: EquipmentFormProps) {
                       ))}
                     </select>
                   </div>
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="machineId">ID de máquina</Label>
+                  <Input
+                    id="machineId"
+                    value={form.machineId}
+                    onChange={(e) => update("machineId", e.target.value.toUpperCase())}
+                    placeholder="Ej: L1-PC6"
+                    required
+                    className="font-mono"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Formato: L1-PC1, S1-PRY2, A1-IMP1
+                  </p>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">

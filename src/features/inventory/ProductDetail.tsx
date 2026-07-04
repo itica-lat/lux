@@ -10,11 +10,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { TableSkeleton } from "@/components/skeletons/TableSkeleton";
+import { QrCode } from "@/components/ui/QrCode";
 
 const PRODUCT_QUERY = `
   query GetProduct($id: ID!) {
     product(id: $id) {
-      id type kind brand model serialNumber partNumber status issues location
+      id type machineId kind brand model serialNumber partNumber status issues location
       components { id name model manufacturer serialNumber partNumber isFactory isWorking }
       createdAt updatedAt deletedAt
     }
@@ -115,29 +116,42 @@ export function ProductDetail() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
-                <DetailRow label="Tipo" value={product.kind} />
-                <DetailRow label="Marca" value={product.brand} />
-                <DetailRow label="Modelo" value={product.model} />
-                <DetailRow
-                  label="N° de serie"
-                  value={<span className="font-mono text-xs">{product.serialNumber}</span>}
-                />
-                <DetailRow
-                  label="Part number"
-                  value={<span className="font-mono text-xs">{product.partNumber}</span>}
-                />
-                <DetailRow label="Ubicación" value={product.location} />
-                <DetailRow label="Registrado" value={formatDate(product.createdAt)} />
-                <DetailRow label="Actualizado" value={formatDate(product.updatedAt)} />
-                {product.issues && (
-                  <div className="col-span-full">
-                    <DetailRow
-                      label="Fallas / Observaciones"
-                      value={<span className="text-warning">{product.issues}</span>}
-                    />
-                  </div>
-                )}
+              <div className="flex gap-8 items-start">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 flex-1">
+                  <DetailRow
+                    label="ID de máquina"
+                    value={
+                      <span className="font-mono font-semibold text-primary">
+                        {product.machineId}
+                      </span>
+                    }
+                  />
+                  <DetailRow label="Tipo" value={product.kind} />
+                  <DetailRow label="Marca" value={product.brand} />
+                  <DetailRow label="Modelo" value={product.model} />
+                  <DetailRow
+                    label="N° de serie"
+                    value={<span className="font-mono text-xs">{product.serialNumber}</span>}
+                  />
+                  <DetailRow
+                    label="Part number"
+                    value={<span className="font-mono text-xs">{product.partNumber}</span>}
+                  />
+                  <DetailRow label="Ubicación" value={product.location} />
+                  <DetailRow label="Registrado" value={formatDate(product.createdAt)} />
+                  <DetailRow label="Actualizado" value={formatDate(product.updatedAt)} />
+                  {product.issues && (
+                    <div className="col-span-full">
+                      <DetailRow
+                        label="Fallas / Observaciones"
+                        value={<span className="text-warning">{product.issues}</span>}
+                      />
+                    </div>
+                  )}
+                </div>
+                <div className="shrink-0">
+                  <QrCode value={product.machineId} size={120} label={product.machineId} />
+                </div>
               </div>
             </CardContent>
           </Card>
