@@ -9,6 +9,8 @@ import type {
   Location,
 } from "./types";
 
+export const AUTH_STORAGE_KEY = "lux_auth"; // Clave de localStorage compartida entre useAuth y gql()
+
 export const ROUTES = {
   SPLASH: "/",
   LOGIN: "/login",

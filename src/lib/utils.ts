@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { AUTH_STORAGE_KEY } from "@/lib/constants";
 
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
@@ -35,10 +36,25 @@ export function formatRelativeTime(iso: string): string {
   return "ahora mismo";
 } // Parseo de tiempo relativo
 
+function getAuthToken(): string | null {
+  try {
+    const stored = localStorage.getItem(AUTH_STORAGE_KEY);
+    if (!stored) return null;
+    const { token } = JSON.parse(stored) as { token?: string };
+    return token ?? null;
+  } catch {
+    return null;
+  }
+} // Lee el token de la sesion guardada para adjuntarlo en cada request
+
 export async function gql<T>(query: string, variables?: Record<string, unknown>): Promise<T> {
+  const token = getAuthToken();
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers.Authorization = `Bearer ${token}`;
+
   const response = await fetch("/graphql", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify({ query, variables }),
   });
 
