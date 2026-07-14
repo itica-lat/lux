@@ -7,6 +7,7 @@ import { mockServices } from "./data/services";
 import { mockActivityLogs } from "./generators";
 import type {
   User,
+  UserRole,
   Product,
   Component,
   Ticket,
@@ -21,6 +22,23 @@ import type {
 function filterByStatus<T extends { status: string }>(items: T[], status?: string): T[] {
   if (!status) return items;
   return items.filter((i) => i.status === status);
+}
+
+const STAFF_ROLES: UserRole[] = ["root_admin", "admin", "tecnico"];
+const ELEVATED_ROLES: UserRole[] = ["root_admin", "admin"];
+
+// Simula la verificacion de un token en un backend real: lo resuelve desde
+// el header Authorization en vez de leer localStorage directamente.
+function getCaller(request: Request): User | null {
+  const authHeader = request.headers.get("Authorization");
+  const token = authHeader?.match(/^Bearer (.+)$/)?.[1];
+  const userId = token?.match(/^mock-token-(.+)$/)?.[1];
+  if (!userId) return null;
+  return mockUsers.find((u) => u.id === userId && u.isActive) ?? null;
+}
+
+function hasRole(caller: User | null, allowedRoles: UserRole[]): caller is User {
+  return caller !== null && allowedRoles.includes(caller.role);
 }
 
 export const handlers = [
@@ -39,11 +57,8 @@ export const handlers = [
     });
   }),
 
-  graphql.query("GetMe", () => {
-    const stored = localStorage.getItem("lux_auth");
-    if (!stored) return HttpResponse.json({ data: { me: null } });
-    const user = JSON.parse(stored) as User;
-    return HttpResponse.json({ data: { me: user } });
+  graphql.query("GetMe", ({ request }) => {
+    return HttpResponse.json({ data: { me: getCaller(request) } });
   }),
 
   graphql.query("GetUsers", ({ variables }) => {
@@ -214,12 +229,12 @@ export const handlers = [
     return HttpResponse.json({ data: { activityLogs: logs } });
   }),
 
-  graphql.mutation("CreateTicket", ({ variables }) => {
+  graphql.mutation("CreateTicket", ({ request, variables }) => {
+    const user = getCaller(request);
+    if (!user) return HttpResponse.json({ errors: [{ message: "No autenticado" }] });
     const { input } = variables as {
       input: { title: string; description: string; category: string; equipmentId?: string };
     };
-    const stored = localStorage.getItem("lux_auth");
-    const user = stored ? (JSON.parse(stored) as User) : mockUsers[6];
     const equipment = input.equipmentId
       ? (mockProducts.find((p) => p.id === input.equipmentId) ?? null)
       : null;
@@ -244,19 +259,24 @@ export const handlers = [
     return HttpResponse.json({ data: { createTicket: newTicket } });
   }),
 
-  graphql.mutation("ClaimTicket", ({ variables }) => {
+  graphql.mutation("ClaimTicket", ({ request, variables }) => {
+    const caller = getCaller(request);
+    if (!hasRole(caller, STAFF_ROLES)) {
+      return HttpResponse.json({ errors: [{ message: "No tenés permisos para esta acción" }] });
+    }
     const { id } = variables as { id: string };
-    const stored = localStorage.getItem("lux_auth");
-    const user = stored ? (JSON.parse(stored) as User) : mockUsers[3];
     const ticket = mockTickets.find((t) => t.id === id);
     if (!ticket) return HttpResponse.json({ errors: [{ message: "Ticket no encontrado" }] });
-    ticket.assignedTo = user;
+    ticket.assignedTo = caller;
     ticket.status = "in_progress";
     ticket.updatedAt = new Date().toISOString();
     return HttpResponse.json({ data: { claimTicket: ticket } });
   }),
 
-  graphql.mutation("UpdateTicket", ({ variables }) => {
+  graphql.mutation("UpdateTicket", ({ request, variables }) => {
+    if (!hasRole(getCaller(request), STAFF_ROLES)) {
+      return HttpResponse.json({ errors: [{ message: "No tenés permisos para esta acción" }] });
+    }
     const { id, input } = variables as { id: string; input: Partial<Ticket> };
     const ticket = mockTickets.find((t) => t.id === id);
     if (!ticket) return HttpResponse.json({ errors: [{ message: "Ticket no encontrado" }] });
@@ -264,7 +284,10 @@ export const handlers = [
     return HttpResponse.json({ data: { updateTicket: ticket } });
   }),
 
-  graphql.mutation("CompleteTicket", ({ variables }) => {
+  graphql.mutation("CompleteTicket", ({ request, variables }) => {
+    if (!hasRole(getCaller(request), STAFF_ROLES)) {
+      return HttpResponse.json({ errors: [{ message: "No tenés permisos para esta acción" }] });
+    }
     const { id, input } = variables as {
       id: string;
       input: { diagnosis: string; corrected: boolean; actionsTaken: string };
@@ -280,7 +303,11 @@ export const handlers = [
     return HttpResponse.json({ data: { completeTicket: ticket } });
   }),
 
-  graphql.mutation("CreateLoan", ({ variables }) => {
+  graphql.mutation("CreateLoan", ({ request, variables }) => {
+    const approver = getCaller(request);
+    if (!hasRole(approver, STAFF_ROLES)) {
+      return HttpResponse.json({ errors: [{ message: "No tenés permisos para esta acción" }] });
+    }
     const { input } = variables as {
       input: {
         equipmentId: string;
@@ -290,8 +317,6 @@ export const handlers = [
         componentIds?: string[];
       };
     };
-    const stored = localStorage.getItem("lux_auth");
-    const approver = stored ? (JSON.parse(stored) as User) : mockUsers[1];
     const equipment = mockProducts.find((p) => p.id === input.equipmentId);
     const loanUser = mockUsers.find((u) => u.id === input.userId);
     if (!equipment || !loanUser) {
@@ -318,7 +343,10 @@ export const handlers = [
     return HttpResponse.json({ data: { createLoan: newLoan } });
   }),
 
-  graphql.mutation("ApproveLoan", ({ variables }) => {
+  graphql.mutation("ApproveLoan", ({ request, variables }) => {
+    if (!hasRole(getCaller(request), ELEVATED_ROLES)) {
+      return HttpResponse.json({ errors: [{ message: "No tenés permisos para esta acción" }] });
+    }
     const { id } = variables as { id: string };
     const loan = mockLoans.find((l) => l.id === id);
     if (!loan) return HttpResponse.json({ errors: [{ message: "Préstamo no encontrado" }] });
@@ -327,7 +355,10 @@ export const handlers = [
     return HttpResponse.json({ data: { approveLoan: loan } });
   }),
 
-  graphql.mutation("ReturnLoan", ({ variables }) => {
+  graphql.mutation("ReturnLoan", ({ request, variables }) => {
+    if (!hasRole(getCaller(request), STAFF_ROLES)) {
+      return HttpResponse.json({ errors: [{ message: "No tenés permisos para esta acción" }] });
+    }
     const { id } = variables as { id: string };
     const loan = mockLoans.find((l) => l.id === id);
     if (!loan) return HttpResponse.json({ errors: [{ message: "Préstamo no encontrado" }] });
@@ -337,7 +368,9 @@ export const handlers = [
     return HttpResponse.json({ data: { returnLoan: loan } });
   }),
 
-  graphql.mutation("CreateServiceRequest", ({ variables }) => {
+  graphql.mutation("CreateServiceRequest", ({ request, variables }) => {
+    const user = getCaller(request);
+    if (!user) return HttpResponse.json({ errors: [{ message: "No autenticado" }] });
     const { input } = variables as {
       input: {
         type: string;
@@ -347,8 +380,6 @@ export const handlers = [
         equipmentId?: string;
       };
     };
-    const stored = localStorage.getItem("lux_auth");
-    const user = stored ? (JSON.parse(stored) as User) : mockUsers[6];
     const newService: ServiceRequest = {
       id: `svc-${Date.now()}`,
       type: input.type as ServiceRequest["type"],
@@ -366,7 +397,10 @@ export const handlers = [
     return HttpResponse.json({ data: { createServiceRequest: newService } });
   }),
 
-  graphql.mutation("UpdateServiceRequest", ({ variables }) => {
+  graphql.mutation("UpdateServiceRequest", ({ request, variables }) => {
+    if (!hasRole(getCaller(request), STAFF_ROLES)) {
+      return HttpResponse.json({ errors: [{ message: "No tenés permisos para esta acción" }] });
+    }
     const { id, input } = variables as {
       id: string;
       input: { status?: string; resolutionText?: string };
@@ -379,7 +413,10 @@ export const handlers = [
     return HttpResponse.json({ data: { updateServiceRequest: service } });
   }),
 
-  graphql.mutation("CreateUser", ({ variables }) => {
+  graphql.mutation("CreateUser", ({ request, variables }) => {
+    if (!hasRole(getCaller(request), ELEVATED_ROLES)) {
+      return HttpResponse.json({ errors: [{ message: "No tenés permisos para esta acción" }] });
+    }
     const { input } = variables as {
       input: {
         name: string;
@@ -407,7 +444,10 @@ export const handlers = [
     return HttpResponse.json({ data: { createUser: newUser } });
   }),
 
-  graphql.mutation("UpdateUser", ({ variables }) => {
+  graphql.mutation("UpdateUser", ({ request, variables }) => {
+    if (!hasRole(getCaller(request), ELEVATED_ROLES)) {
+      return HttpResponse.json({ errors: [{ message: "No tenés permisos para esta acción" }] });
+    }
     const { id, input } = variables as {
       id: string;
       input: Partial<User & { password?: string }>;
@@ -420,7 +460,10 @@ export const handlers = [
     return HttpResponse.json({ data: { updateUser: user } });
   }),
 
-  graphql.mutation("DeleteUser", ({ variables }) => {
+  graphql.mutation("DeleteUser", ({ request, variables }) => {
+    if (!hasRole(getCaller(request), ELEVATED_ROLES)) {
+      return HttpResponse.json({ errors: [{ message: "No tenés permisos para esta acción" }] });
+    }
     const { id } = variables as { id: string };
     const user = mockUsers.find((u) => u.id === id);
     if (!user || user.role === "root_admin") {
@@ -431,7 +474,10 @@ export const handlers = [
     return HttpResponse.json({ data: { deleteUser: true } });
   }),
 
-  graphql.mutation("CreateProduct", ({ variables }) => {
+  graphql.mutation("CreateProduct", ({ request, variables }) => {
+    if (!hasRole(getCaller(request), STAFF_ROLES)) {
+      return HttpResponse.json({ errors: [{ message: "No tenés permisos para esta acción" }] });
+    }
     const { input } = variables as {
       input: {
         machineId: string;
@@ -461,7 +507,10 @@ export const handlers = [
     return HttpResponse.json({ data: { createProduct: newProduct } });
   }),
 
-  graphql.mutation("UpdateProduct", ({ variables }) => {
+  graphql.mutation("UpdateProduct", ({ request, variables }) => {
+    if (!hasRole(getCaller(request), STAFF_ROLES)) {
+      return HttpResponse.json({ errors: [{ message: "No tenés permisos para esta acción" }] });
+    }
     const { id, input } = variables as { id: string; input: Partial<Product> };
     const product = mockProducts.find((p) => p.id === id);
     if (!product) return HttpResponse.json({ errors: [{ message: "Producto no encontrado" }] });
@@ -469,7 +518,10 @@ export const handlers = [
     return HttpResponse.json({ data: { updateProduct: product } });
   }),
 
-  graphql.mutation("SoftDeleteProduct", ({ variables }) => {
+  graphql.mutation("SoftDeleteProduct", ({ request, variables }) => {
+    if (!hasRole(getCaller(request), STAFF_ROLES)) {
+      return HttpResponse.json({ errors: [{ message: "No tenés permisos para esta acción" }] });
+    }
     const { id } = variables as { id: string };
     const product = mockProducts.find((p) => p.id === id);
     if (!product) return HttpResponse.json({ errors: [{ message: "Producto no encontrado" }] });
@@ -477,7 +529,10 @@ export const handlers = [
     return HttpResponse.json({ data: { softDeleteProduct: true } });
   }),
 
-  graphql.mutation("CreateComponent", ({ variables }) => {
+  graphql.mutation("CreateComponent", ({ request, variables }) => {
+    if (!hasRole(getCaller(request), STAFF_ROLES)) {
+      return HttpResponse.json({ errors: [{ message: "No tenés permisos para esta acción" }] });
+    }
     const { input } = variables as {
       input: {
         name: string;
@@ -503,11 +558,15 @@ export const handlers = [
     return HttpResponse.json({ data: { createComponent: newComponent } });
   }),
 
-  graphql.mutation("ChangePassword", () => {
+  graphql.mutation("ChangePassword", ({ request }) => {
+    if (!getCaller(request)) return HttpResponse.json({ errors: [{ message: "No autenticado" }] });
     return HttpResponse.json({ data: { changePassword: true } });
   }),
 
-  graphql.mutation("AssignTicket", ({ variables }) => {
+  graphql.mutation("AssignTicket", ({ request, variables }) => {
+    if (!hasRole(getCaller(request), STAFF_ROLES)) {
+      return HttpResponse.json({ errors: [{ message: "No tenés permisos para esta acción" }] });
+    }
     const { id, technicianId } = variables as { id: string; technicianId: string };
     const ticket = mockTickets.find((t) => t.id === id);
     const tech = mockUsers.find((u) => u.id === technicianId);

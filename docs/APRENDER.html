@@ -524,14 +524,37 @@ gql&lt;T&gt;()  →  fetch("/graphql", { method: "POST", body: {query, variables
   &lt;/ProtectedRoute&gt;
 ) }</code></pre>
 
-      <div class="callout danger">
-        <div class="title">Punto débil real (no hipotético)</div>
-        <code>gql()</code> (sección 3) nunca lee el <code>token</code> guardado ni lo manda en un header <code>Authorization</code>. Y del lado del mock (<code>src/mocks/handlers.ts</code>), las mutations no verifican el rol de quien llama — la única excepción es <code>DeleteUser</code>, que bloquea borrar a un <code>root_admin</code>. O sea: si alguien llama <code>gql(CREATE_LOAN_MUTATION, ...)</code> directamente desde la consola del navegador sin pasar por la UI, el mock lo ejecuta igual. <code>ProtectedRoute</code> te esconde el botón; no te cierra la puerta.
+      <div class="callout info">
+        <div class="title">Actualizado — este gap ya se corrigió</div>
+        Antes, <code>gql()</code> nunca mandaba el <code>token</code> en un header, y las mutations del mock no verificaban el rol de quien llamaba. Ahora:
+        <ul style="margin: 8px 0 0; padding-left: 20px;">
+          <li><code>gql()</code> (<code>src/lib/utils.ts</code>) lee el token de <code>localStorage</code> y lo manda como <code>Authorization: Bearer &lt;token&gt;</code> en cada request.</li>
+          <li><code>src/mocks/handlers.ts</code> resuelve al usuario que llama desde ese header (<code>getCaller(request)</code>, simulando la verificación de un token real) en vez de leer <code>localStorage</code> directamente dentro del handler.</li>
+          <li>Cada mutation que cambia estado sensible verifica el rol del caller con <code>hasRole(caller, ALLOWED_ROLES)</code> antes de ejecutar nada — si llamás <code>gql(CREATE_LOAN_MUTATION, ...)</code> desde la consola sin un token válido de un rol permitido, el mock devuelve un error en vez de ejecutar la mutation.</li>
+        </ul>
       </div>
+      <pre><code>// src/mocks/handlers.ts
+function getCaller(request: Request): User | null {
+  const token = request.headers.get("Authorization")?.match(/^Bearer (.+)$/)?.[1];
+  const userId = token?.match(/^mock-token-(.+)$/)?.[1];
+  return userId ? (mockUsers.find((u) => u.id === userId && u.isActive) ?? null) : null;
+}
+
+function hasRole(caller: User | null, allowedRoles: UserRole[]): caller is User {
+  return caller !== null && allowedRoles.includes(caller.role);
+}
+
+graphql.mutation("ApproveLoan", ({ request, variables }) =&gt; {
+  if (!hasRole(getCaller(request), ELEVATED_ROLES)) {
+    return HttpResponse.json({ errors: [{ message: "No tenés permisos para esta acción" }] });
+  }
+  // ...
+});</code></pre>
+      <p><code>ProtectedRoute</code> sigue escondiendo botones por UX, pero ahora hay una segunda barrera real detrás. Sigue siendo un <em>mock</em>: el backend de producción real es el que tiene que hacer esta misma verificación contra la base de datos, no contra un array en memoria.</p>
 
       <h3>3. La matriz de permisos (documentación, no enforcement)</h3>
       <span class="file-tag">src/features/admin/RolesConfig.tsx</span>
-      <p>Define 15 permisos (<code>view_dashboard</code>, <code>edit_inventory</code>, <code>assign_tickets</code>, <code>manage_users</code>...) mapeados a roles, y los muestra en una tabla dentro del panel de admin. Es una <strong>vista de referencia</strong> para humanos — no hay código que lea este array y bloquee una acción con él.</p>
+      <p>Define 15 permisos (<code>view_dashboard</code>, <code>edit_inventory</code>, <code>assign_tickets</code>, <code>manage_users</code>...) mapeados a roles, y los muestra en una tabla dentro del panel de admin. Sigue siendo solo una <strong>vista de referencia</strong> para humanos — el enforcement nuevo en <code>handlers.ts</code> usa dos grupos de roles más simples (<code>STAFF_ROLES</code> / <code>ELEVATED_ROLES</code>) derivados de cómo la UI ya usaba <code>hasRole()</code> en cada feature, no este array de 15 permisos.</p>
 
       <h3>4. Dónde vive la sesión</h3>
       <span class="file-tag">src/hooks/useAuth.ts</span>
@@ -544,8 +567,8 @@ localStorage.setItem(STORAGE_KEY, JSON.stringify(authUser)); // authUser incluye
       <p>Firewall (UFW), TLS/Nginx, hardening del sistema operativo y la base de datos: todo eso vive en el servidor de producción, fuera de este repo — ver <a href="./ARQUITECTURA.md">ARQUITECTURA.md</a>, sección 4 ("Instalación del servidor").</p>
 
       <details class="qa">
-        <summary>Si tuvieras que agregar seguridad real a este proyecto, ¿cuál sería el primer cambio?</summary>
-        <div class="answer">Que <code>gql()</code> mande el token en un header (<code>Authorization: Bearer ...</code>) y que el backend real (no el mock) rechace mutations si el rol del token no tiene el permiso. El frontend seguiría escondiendo botones por UX, pero dejaría de ser la única barrera.</div>
+        <summary>Ya se agregó el header y el chequeo de rol en el mock. ¿Qué falta para que esto sea seguridad real y no solo una simulación más completa?</summary>
+        <div class="answer">Que el <strong>backend de producción</strong> (fuera de este repo) haga exactamente esta misma verificación: leer el token, resolver el usuario contra la base de datos real (no un array en memoria) y rechazar la mutation si el rol no alcanza. El mock ahora demuestra el patrón correcto, pero un mock nunca es la barrera real — solo evita que te acostumbres a que no exista ninguna.</div>
       </details>
     </section>
 
