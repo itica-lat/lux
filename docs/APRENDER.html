@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lux — Guía de aprendizaje del repo</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #161922;
+    --panel-2: #1c202b;
+    --text: #e6e8ee;
+    --muted: #9aa3b2;
+    --border: #2a2f3d;
+    --accent: #7c9cff;
+    --accent-2: #63d9a4;
+    --warn: #f2b950;
+    --danger: #f2716b;
+    --code-bg: #0b0d12;
+    --radius: 10px;
+    --sidebar-w: 260px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .layout { display: flex; min-height: 100vh; }
+
+  nav.sidebar {
+    width: var(--sidebar-w);
+    flex-shrink: 0;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    padding: 20px 14px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  nav.sidebar h1 {
+    font-size: 15px;
+    color: var(--accent);
+    margin: 0 0 4px;
+  }
+  nav.sidebar .sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  nav.sidebar ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: item;
+  }
+  nav.sidebar li { margin: 0; }
+  nav.sidebar a.nav-link {
+    display: block;
+    counter-increment: item;
+    padding: 7px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--muted);
+    border-left: 2px solid transparent;
+  }
+  nav.sidebar a.nav-link:before {
+    content: counter(item) ". ";
+    color: var(--accent);
+    font-weight: 600;
+  }
+  nav.sidebar a.nav-link:hover { background: var(--panel-2); color: var(--text); text-decoration: none; }
+  nav.sidebar a.nav-link.active {
+    background: var(--panel-2);
+    color: var(--text);
+    border-left-color: var(--accent);
+  }
+
+  main {
+    flex: 1;
+    max-width: 900px;
+    padding: 40px 48px 120px;
+  }
+  header.hero {
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  header.hero h1 { font-size: 30px; margin: 0 0 8px; }
+  header.hero p { color: var(--muted); font-size: 15px; max-width: 640px; }
+  .badges { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  section {
+    margin-bottom: 56px;
+    padding-top: 8px;
+  }
+  section h2 {
+    font-size: 22px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  section h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #0b0d12;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  section .lede { color: var(--muted); margin-bottom: 20px; font-size: 14.5px; }
+  section h3 { font-size: 16px; margin-top: 28px; color: var(--accent); }
+
+  p { font-size: 14.5px; }
+  code {
+    font-family: "Cascadia Code", Consolas, "Fira Code", monospace;
+    background: var(--panel-2);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    overflow-x: auto;
+    font-size: 12.5px;
+    line-height: 1.55;
+  }
+  pre code { background: none; padding: 0; }
+  .file-tag {
+    display: inline-block;
+    font-size: 11px;
+    color: var(--accent-2);
+    margin-bottom: 6px;
+    font-family: Consolas, monospace;
+  }
+
+  table { width: 100%; border-collapse: collapse; margin: 14px 0 20px; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .03em; }
+  tr:hover td { background: var(--panel-2); }
+
+  .tree {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    font-family: Consolas, monospace;
+    font-size: 12.5px;
+    color: #c8cee0;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .tree .dir { color: var(--accent); }
+  .tree .comment { color: var(--muted); }
+
+  details.qa {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-size: 13.5px;
+  }
+  details.qa summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text);
+    list-style: none;
+  }
+  details.qa summary::-webkit-details-marker { display: none; }
+  details.qa summary:before { content: "❓ "; }
+  details.qa[open] summary:before { content: "✅ "; }
+  details.qa .answer { margin-top: 8px; color: var(--muted); }
+
+  .callout {
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-size: 13.5px;
+    border: 1px solid var(--border);
+  }
+  .callout.warn { background: rgba(242,185,80,.08); border-color: rgba(242,185,80,.35); }
+  .callout.warn .title { color: var(--warn); font-weight: 700; margin-bottom: 4px; }
+  .callout.info { background: rgba(124,156,255,.08); border-color: rgba(124,156,255,.35); }
+  .callout.info .title { color: var(--accent); font-weight: 700; margin-bottom: 4px; }
+  .callout.danger { background: rgba(242,113,107,.08); border-color: rgba(242,113,107,.35); }
+  .callout.danger .title { color: var(--danger); font-weight: 700; margin-bottom: 4px; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 700px) { .grid2 { grid-template-columns: 1fr; } }
+
+  .progress-wrap {
+    position: fixed;
+    top: 0; left: var(--sidebar-w);
+    right: 0;
+    height: 3px;
+    background: transparent;
+    z-index: 20;
+  }
+  #progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width .1s; }
+
+  footer {
+    color: var(--muted);
+    font-size: 12.5px;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+  }
+
+  @media (max-width: 860px) {
+    .layout { flex-direction: column; }
+    nav.sidebar { width: 100%; height: auto; position: relative; }
+    .progress-wrap { left: 0; }
+    main { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap"><div id="progress-bar"></div></div>
+
+<div class="layout">
+  <nav class="sidebar">
+    <h1>Lux</h1>
+    <div class="sub">Guía de aprendizaje del repo</div>
+    <ol>
+      <li><a class="nav-link" href="#estructura">Estructura del repo</a></li>
+      <li><a class="nav-link" href="#modulos">Módulos principales</a></li>
+      <li><a class="nav-link" href="#api">Esquema de API (GraphQL)</a></li>
+      <li><a class="nav-link" href="#datos">Datos y requests</a></li>
+      <li><a class="nav-link" href="#seguridad">Seguridad</a></li>
+      <li><a class="nav-link" href="#typescript">TypeScript aplicado</a></li>
+      <li><a class="nav-link" href="#dependencias">Dependencias</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <h1>Cómo está armado Lux</h1>
+      <p>Lux es un sistema de gestión de equipamiento e incidencias (inventario, tickets, préstamos, solicitudes de servicio) para una institución. Este documento es <strong>solo la mitad frontend</strong>: la app React que ves corriendo con <code>bun dev</code>. Hay un backend real (GraphQL + MariaDB) que vive fuera de este repo — está documentado en <a href="./ARQUITECTURA.md">ARQUITECTURA.md</a>.</p>
+      <div class="badges">
+        <span class="badge">React 19.2</span>
+        <span class="badge">TypeScript 6 (strict)</span>
+        <span class="badge">Vite 8</span>
+        <span class="badge">Bun</span>
+        <span class="badge">TailwindCSS 4</span>
+        <span class="badge">GraphQL + MSW</span>
+      </div>
+    </header>
+
+    <!-- 1. ESTRUCTURA -->
+    <section id="estructura">
+      <h2><span class="num">1</span> Estructura del repo</h2>
+      <p class="lede">Es un repo frontend-only (SPA). La organización separa "página" (<code>features/</code>) de "pieza reutilizable" (<code>components/</code>) de "lógica sin React" (<code>lib/</code>).</p>
+
+      <div class="tree">lux/
+├─ <span class="dir">src/</span>
+│  ├─ <span class="dir">assets/</span>          <span class="comment"># imágenes estáticas</span>
+│  ├─ <span class="dir">components/</span>
+│  │  ├─ <span class="dir">accessibility/</span>  <span class="comment"># ThemeSwitcher, FontSizeControl, HighContrastToggle</span>
+│  │  ├─ <span class="dir">auth/</span>           <span class="comment"># ProtectedRoute (guard de rutas)</span>
+│  │  ├─ <span class="dir">charts/</span>         <span class="comment"># BarChart, PieChart (recharts)</span>
+│  │  ├─ <span class="dir">layout/</span>         <span class="comment"># AppLayout, AdminLayout, Sidebar, Topbar, TabBar</span>
+│  │  ├─ <span class="dir">skeletons/</span>      <span class="comment"># CardSkeleton, TableSkeleton, WizardSkeleton</span>
+│  │  └─ <span class="dir">ui/</span>             <span class="comment"># primitivas Radix: button, dialog, select, tabs...</span>
+│  ├─ <span class="dir">features/</span>          <span class="comment"># una carpeta por pantalla/flujo</span>
+│  │  ├─ admin/ · dashboard/ · errors/ · inventory/
+│  │  └─ loans/ · login/ · profile/ · services/ · splash/ · tickets/
+│  ├─ <span class="dir">hooks/</span>             <span class="comment"># useAuth, useTheme, useHaptics, useSkeleton (+ useAsync)</span>
+│  ├─ <span class="dir">lib/</span>               <span class="comment"># types.ts, constants.ts, utils.ts — sin JSX, sin estado</span>
+│  ├─ <span class="dir">mocks/</span>             <span class="comment"># MSW: browser.ts, handlers.ts, schema.ts, data/</span>
+│  ├─ <span class="dir">router/</span>            <span class="comment"># index.tsx — todas las rutas</span>
+│  ├─ main.tsx           <span class="comment"># entry point de React</span>
+│  └─ index.css          <span class="comment"># Tailwind + tokens de diseño</span>
+├─ <span class="dir">docs/</span>               <span class="comment"># ARQUITECTURA.md (infra real) + esta guía</span>
+└─ package.json</div>
+
+      <h3>Scripts (package.json)</h3>
+      <table>
+        <tr><th>Script</th><th>Comando</th><th>Para qué</th></tr>
+        <tr><td><code>bun dev</code></td><td><code>vite</code></td><td>Servidor de desarrollo con hot reload</td></tr>
+        <tr><td><code>bun run build</code></td><td><code>tsc -b && vite build</code></td><td>Chequea tipos y arma el bundle de producción</td></tr>
+        <tr><td><code>bun run typecheck</code></td><td><code>tsc -b --noEmit</code></td><td>Solo valida tipos, no emite JS</td></tr>
+        <tr><td><code>bun run lint</code></td><td><code>oxlint .</code></td><td>Linter (Rust, reemplaza ESLint)</td></tr>
+        <tr><td><code>bun run setup</code></td><td><code>bunx msw init public/</code></td><td>Registra el service worker de MSW</td></tr>
+      </table>
+
+      <details class="qa">
+        <summary>¿Por qué separar <code>features/</code> de <code>components/</code>?</summary>
+        <div class="answer"><code>features/</code> son cosas que cuelgan de una ruta (montás una vez, viven en <code>router/index.tsx</code>). <code>components/</code> no saben nada de rutas: se importan desde cualquier feature. Si movés un archivo de <code>features/</code> y deja de tener sentido en el router, probablemente pertenece a <code>components/</code>.</div>
+      </details>
+    </section>
+
+    <!-- 2. MODULOS -->
+    <section id="modulos">
+      <h2><span class="num">2</span> Módulos principales y sus funciones</h2>
+      <p class="lede">Cada carpeta de <code>features/</code> es un flujo de negocio completo. Así están cableadas en <a href="#"><code>src/router/index.tsx</code></a>:</p>
+
+      <table>
+        <tr><th>Feature</th><th>Qué hace</th><th>Piezas clave</th></tr>
+        <tr><td><code>dashboard/</code></td><td>KPIs generales: equipos totales, tickets abiertos, préstamos activos, solicitudes pendientes</td><td><code>DashboardPage.tsx</code> (usa <code>BarChart</code>/<code>PieChart</code>)</td></tr>
+        <tr><td><code>inventory/</code></td><td>CRUD de equipos (productos) y sus componentes internos</td><td><code>InventoryPage</code>, <code>ProductDetail</code>, <code>ComponentDetail</code>, <code>EquipmentForm</code>, <code>EquipmentStatus</code></td></tr>
+        <tr><td><code>tickets/</code></td><td>Mesa de ayuda: crear, listar, diagnosticar y resolver incidentes</td><td><code>TicketList</code>, <code>TicketDetail</code>, <code>OolList</code> (sin asignar), <code>TicketWizard</code> (wizard multi-paso)</td></tr>
+        <tr><td><code>loans/</code></td><td>Ciclo de préstamo de equipos: pedir → aprobar → devolver</td><td><code>LoansPage.tsx</code></td></tr>
+        <tr><td><code>services/</code></td><td>Solicitudes de servicio (preparar laboratorio, instalar software, etc.)</td><td><code>ServiceList</code>, <code>ServiceDetail</code></td></tr>
+        <tr><td><code>login/</code></td><td>Autenticación por DNI + contraseña</td><td><code>LoginPage</code>, <code>WaitToLogin</code></td></tr>
+        <tr><td><code>admin/</code></td><td>Panel exclusivo de administración</td><td><code>AdminDashboard</code>, <code>UserManagement</code>, <code>RolesConfig</code>, <code>ActivityLog</code></td></tr>
+        <tr><td><code>profile/</code></td><td>Ver/editar los datos del usuario logueado</td><td><code>ProfilePage.tsx</code></td></tr>
+        <tr><td><code>errors/</code></td><td>Páginas 404 / 403 / 500</td><td><code>NotFoundPage</code>, <code>ForbiddenPage</code>, <code>ServerErrorPage</code></td></tr>
+        <tr><td><code>splash/</code></td><td>Pantalla de carga inicial</td><td><code>Splash.tsx</code></td></tr>
+      </table>
+
+      <h3>El módulo más complejo: <code>TicketWizard</code></h3>
+      <p>Es el mejor ejemplo de composición de componentes del repo: un formulario de varios pasos, cada uno su propio archivo bajo <code>features/tickets/steps/</code>:</p>
+      <div class="tree"><span class="dir">tickets/steps/</span>
+├─ IncidentStep.tsx    <span class="comment"># qué pasó</span>
+├─ PcStatusStep.tsx    <span class="comment"># estado del equipo</span>
+├─ PcHistoryStep.tsx   <span class="comment"># historial previo</span>
+├─ DiagnosisStep.tsx   <span class="comment"># diagnóstico técnico</span>
+└─ SummaryStep.tsx     <span class="comment"># confirmación final</span></div>
+      <p>El wizard mantiene el estado del formulario completo en el componente padre y cada <code>*Step.tsx</code> recibe solo lo que necesita mostrar/editar — ninguno sabe de los demás pasos.</p>
+
+      <details class="qa">
+        <summary>¿Dónde buscarías la lógica de "quién puede ver este ticket"?</summary>
+        <div class="answer">No está en <code>TicketList.tsx</code> — está un nivel arriba, en el router (<code>ProtectedRoute</code> envolviendo la ruta). Ver la sección 5, Seguridad.</div>
+      </details>
+    </section>
+
+    <!-- 3. API -->
+    <section id="api">
+      <h2><span class="num">3</span> Esquema de API</h2>
+      <p class="lede">No es REST. Todo el tráfico de datos pasa por <strong>un único endpoint</strong>: <code>POST /graphql</code>. El "esquema" vive en <code>src/mocks/schema.ts</code> y las respuestas mockeadas en <code>src/mocks/handlers.ts</code> (interceptadas por MSW en desarrollo).</p>
+
+      <h3>La función que envuelve todo: <code>gql()</code></h3>
+      <span class="file-tag">src/lib/utils.ts</span>
+      <pre><code>export async function gql&lt;T&gt;(query: string, variables?: Record&lt;string, unknown&gt;): Promise&lt;T&gt; {
+  const response = await fetch("/graphql", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query, variables }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+  }
+
+  const json = (await response.json()) as { data?: T; errors?: Array&lt;{ message: string }&gt; };
+
+  if (json.errors && json.errors.length > 0) {
+    throw new Error(json.errors[0].message);
+  }
+  if (!json.data) {
+    throw new Error("No data returned from API");
+  }
+  return json.data;
+}</code></pre>
+      <p>Cada feature define sus propias queries/mutations como <em>template strings</em> justo arriba del componente que las usa, y las pasa a <code>gql&lt;T&gt;()</code>. No hay un cliente GraphQL (Apollo, urql) — es un <code>fetch</code> con tipado manual encima.</p>
+
+      <h3>Entidades principales</h3>
+      <table>
+        <tr><th>Entidad</th><th>Representa</th></tr>
+        <tr><td><code>User</code></td><td>Usuario del sistema (4 roles, ver sección Seguridad)</td></tr>
+        <tr><td><code>Product</code> / <code>Component</code></td><td>Equipo completo vs. pieza interna (ambos comparten un discriminante <code>type</code>)</td></tr>
+        <tr><td><code>Ticket</code></td><td>Incidente de soporte, con estado y diagnóstico</td></tr>
+        <tr><td><code>Loan</code></td><td>Préstamo de un equipo a un usuario</td></tr>
+        <tr><td><code>ServiceRequest</code></td><td>Pedido de servicio (instalación, laboratorio, etc.)</td></tr>
+        <tr><td><code>ActivityLog</code></td><td>Auditoría de operaciones (quién hizo qué y cuándo)</td></tr>
+      </table>
+
+      <div class="grid2">
+        <div>
+          <h3>Queries (lectura)</h3>
+          <pre><code>login(dni, password)
+me
+users(role?, isActive?)
+products(status?, location?)
+productByMachineId(machineId)
+components(productId?, isWorking?)
+tickets(status?, assignedToId?, ...)
+oolTickets()          # sin asignar
+loans(status?, userId?)
+serviceRequests(status?, ...)
+dashboardStats(period?)
+activityLogs(userId?, ...)</code></pre>
+        </div>
+        <div>
+          <h3>Mutations (escritura)</h3>
+          <pre><code>createUser / updateUser / deleteUser
+createProduct / updateProduct
+createComponent / updateComponent
+createTicket / assignTicket
+claimTicket / completeTicket
+createLoan / approveLoan
+rejectLoan / returnLoan
+createServiceRequest
+changePassword</code></pre>
+        </div>
+      </div>
+
+      <div class="callout info">
+        <div class="title">Dato clave</div>
+        En producción este mismo esquema lo resuelve un backend GraphQL real (fuera de este repo, ver <a href="./ARQUITECTURA.md">ARQUITECTURA.md</a>). En desarrollo, MSW intercepta el <code>fetch</code> antes de que salga a la red y le contesta con datos en memoria de <code>src/mocks/data/*.ts</code>.
+      </div>
+
+      <details class="qa">
+        <summary>Si agregás un campo nuevo a <code>Ticket</code>, ¿en cuántos lugares tenés que tocarlo (en dev)?</summary>
+        <div class="answer">Tres: <code>src/lib/types.ts</code> (el tipo TS), <code>src/mocks/schema.ts</code> (el schema GraphQL) y <code>src/mocks/handlers.ts</code>/<code>data/</code> (el resolver y los datos falsos). En producción también el backend real.</div>
+      </details>
+    </section>
+
+    <!-- 4. DATOS Y REQUESTS -->
+    <section id="datos">
+      <h2><span class="num">4</span> Base de datos y cómo se hacen requests</h2>
+      <p class="lede"><strong>Este repo no tiene base de datos.</strong> Es 100% frontend. Lo que simula la base de datos en desarrollo son arrays en memoria dentro de <code>src/mocks/data/</code> (<code>mockUsers</code>, <code>mockProducts</code>, <code>mockTickets</code>...). La base real (MariaDB) vive en el servidor de producción, documentado en <a href="./ARQUITECTURA.md">ARQUITECTURA.md</a> (sección 4).</p>
+
+      <h3>El hook que hace los pedidos: <code>useAsync</code></h3>
+      <span class="file-tag">src/hooks/useSkeleton.ts</span>
+      <pre><code>export function useAsync&lt;T&gt;(
+  fn: () =&gt; Promise&lt;T&gt;,
+  deps: unknown[] = [],
+): { data: T | null; isLoading: boolean; error: string | null; refetch: () =&gt; void } {
+  const [data, setData] = useState&lt;T | null&gt;(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState&lt;string | null&gt;(null);
+  const [trigger, setTrigger] = useState(0);
+
+  useEffect(() =&gt; {
+    let cancelled = false;
+    setIsLoading(true);
+    fn()
+      .then((result) =&gt; { if (!cancelled) setData(result); })
+      .catch((err: unknown) =&gt; {
+        if (!cancelled) setError(err instanceof Error ? err.message : "Error desconocido");
+      })
+      .finally(() =&gt; { if (!cancelled) setIsLoading(false); });
+    return () =&gt; { cancelled = true; };
+  }, [trigger, ...deps]);
+
+  const refetch = () =&gt; setTrigger((t) =&gt; t + 1);
+  return { data, isLoading, error, refetch };
+}</code></pre>
+      <p>No hay React Query ni SWR. <code>useAsync</code> es la versión artesanal: guarda loading/error/data a mano y expone <code>refetch</code>. El truco del <code>cancelled</code> flag evita el clásico bug de "setState en un componente que ya se desmontó".</p>
+
+      <h3>Uso real en un componente</h3>
+      <span class="file-tag">src/features/tickets/TicketList.tsx</span>
+      <pre><code>const { data, isLoading, error, refetch } = useAsync&lt;{ tickets: Ticket[] }&gt;(
+  () =&gt; gql(TICKETS_QUERY, { submittedById: isSolicitante ? user?.id : undefined }),
+  [isSolicitante, user?.id],
+);</code></pre>
+
+      <h3>El flujo completo</h3>
+      <div class="tree">Componente (ej. TicketList)
+   │  llama useAsync(() => gql(QUERY, vars), [deps])
+   ▼
+gql&lt;T&gt;()  →  fetch("/graphql", { method: "POST", body: {query, variables} })
+   │
+   ├─ <span class="dir">DEV</span>:  MSW intercepta el fetch → handlers.ts → arrays de mocks/data/*.ts
+   └─ <span class="dir">PROD</span>: pasa de verdad por la red → Nginx → backend GraphQL → MariaDB</div>
+
+      <h3>Estado global (sin Redux)</h3>
+      <p>Solo dos <em>Context</em> de React, ambos persistidos en <code>localStorage</code>:</p>
+      <table>
+        <tr><th>Context</th><th>Guarda</th><th>Clave en localStorage</th></tr>
+        <tr><td><code>AuthContext</code> (<code>useAuth.ts</code>)</td><td>usuario logueado, token, <code>hasRole()</code></td><td><code>lux_auth</code></td></tr>
+        <tr><td><code>ThemeContext</code> (<code>useTheme.ts</code>)</td><td>tema, tamaño de fuente, alto contraste</td><td><code>lux_theme</code></td></tr>
+      </table>
+
+      <details class="qa">
+        <summary>¿Qué pasa si dos componentes piden la misma query al mismo tiempo?</summary>
+        <div class="answer">Se disparan dos <code>fetch</code> independientes — no hay caché ni deduplicación (eso es justo lo que te da gratis una librería como React Query, y es el trade-off de no usarla acá).</div>
+      </details>
+    </section>
+
+    <!-- 5. SEGURIDAD -->
+    <section id="seguridad">
+      <h2><span class="num">5</span> Seguridad</h2>
+      <p class="lede">Antes de la lista de mecanismos, la idea más importante de esta sección: <strong>en este repo la seguridad es casi toda cosmética (RBAC de UI)</strong>. La aplicación real de permisos tiene que pasar por el backend — y ahí mismo se puede comprobar que, en los mocks, no pasa.</p>
+
+      <h3>1. Los 4 roles</h3>
+      <span class="file-tag">src/lib/types.ts:1</span>
+      <pre><code>export type UserRole = "root_admin" | "admin" | "tecnico" | "solicitante";</code></pre>
+
+      <h3>2. El guard de rutas: <code>ProtectedRoute</code></h3>
+      <span class="file-tag">src/components/auth/ProtectedRoute.tsx</span>
+      <pre><code>export function ProtectedRoute({ children, roles }: ProtectedRouteProps) {
+  const { isAuthenticated, user } = useAuth();
+  const location = useLocation();
+
+  if (!isAuthenticated) {
+    return &lt;Navigate to={ROUTES.LOGIN} state={{ from: location }} replace /&gt;;
+  }
+  if (roles && user && !roles.includes(user.role)) {
+    return &lt;Navigate to={ROUTES.FORBIDDEN} replace /&gt;;
+  }
+  return &lt;&gt;{children}&lt;/&gt;;
+}</code></pre>
+      <p>Se usa envolviendo rutas en <code>router/index.tsx</code>, por ejemplo:</p>
+      <pre><code>{ path: "loans", element: (
+  &lt;ProtectedRoute roles={["root_admin", "admin", "tecnico"]}&gt;
+    &lt;LoansPage /&gt;
+  &lt;/ProtectedRoute&gt;
+) }</code></pre>
+
+      <div class="callout info">
+        <div class="title">Actualizado — este gap ya se corrigió</div>
+        Antes, <code>gql()</code> nunca mandaba el <code>token</code> en un header, y las mutations del mock no verificaban el rol de quien llamaba. Ahora:
+        <ul style="margin: 8px 0 0; padding-left: 20px;">
+          <li><code>gql()</code> (<code>src/lib/utils.ts</code>) lee el token de <code>localStorage</code> y lo manda como <code>Authorization: Bearer &lt;token&gt;</code> en cada request.</li>
+          <li><code>src/mocks/handlers.ts</code> resuelve al usuario que llama desde ese header (<code>getCaller(request)</code>, simulando la verificación de un token real) en vez de leer <code>localStorage</code> directamente dentro del handler.</li>
+          <li>Cada mutation que cambia estado sensible verifica el rol del caller con <code>hasRole(caller, ALLOWED_ROLES)</code> antes de ejecutar nada — si llamás <code>gql(CREATE_LOAN_MUTATION, ...)</code> desde la consola sin un token válido de un rol permitido, el mock devuelve un error en vez de ejecutar la mutation.</li>
+        </ul>
+      </div>
+      <pre><code>// src/mocks/handlers.ts
+function getCaller(request: Request): User | null {
+  const token = request.headers.get("Authorization")?.match(/^Bearer (.+)$/)?.[1];
+  const userId = token?.match(/^mock-token-(.+)$/)?.[1];
+  return userId ? (mockUsers.find((u) => u.id === userId && u.isActive) ?? null) : null;
+}
+
+function hasRole(caller: User | null, allowedRoles: UserRole[]): caller is User {
+  return caller !== null && allowedRoles.includes(caller.role);
+}
+
+graphql.mutation("ApproveLoan", ({ request, variables }) =&gt; {
+  if (!hasRole(getCaller(request), ELEVATED_ROLES)) {
+    return HttpResponse.json({ errors: [{ message: "No tenés permisos para esta acción" }] });
+  }
+  // ...
+});</code></pre>
+      <p><code>ProtectedRoute</code> sigue escondiendo botones por UX, pero ahora hay una segunda barrera real detrás. Sigue siendo un <em>mock</em>: el backend de producción real es el que tiene que hacer esta misma verificación contra la base de datos, no contra un array en memoria.</p>
+
+      <h3>3. La matriz de permisos (documentación, no enforcement)</h3>
+      <span class="file-tag">src/features/admin/RolesConfig.tsx</span>
+      <p>Define 15 permisos (<code>view_dashboard</code>, <code>edit_inventory</code>, <code>assign_tickets</code>, <code>manage_users</code>...) mapeados a roles, y los muestra en una tabla dentro del panel de admin. Sigue siendo solo una <strong>vista de referencia</strong> para humanos — el enforcement nuevo en <code>handlers.ts</code> usa dos grupos de roles más simples (<code>STAFF_ROLES</code> / <code>ELEVATED_ROLES</code>) derivados de cómo la UI ya usaba <code>hasRole()</code> en cada feature, no este array de 15 permisos.</p>
+
+      <h3>4. Dónde vive la sesión</h3>
+      <span class="file-tag">src/hooks/useAuth.ts</span>
+      <pre><code>const STORAGE_KEY = "lux_auth";
+// ...
+localStorage.setItem(STORAGE_KEY, JSON.stringify(authUser)); // authUser incluye el token</code></pre>
+      <p><code>localStorage</code> no es <code>httpOnly</code>: cualquier script que logre correr en la página (XSS) puede leer el token. La defensa contra XSS que sí existe es implícita: React escapa por defecto todo lo que renderiza en JSX.</p>
+
+      <h3>5. Dónde está la seguridad "de verdad"</h3>
+      <p>Firewall (UFW), TLS/Nginx, hardening del sistema operativo y la base de datos: todo eso vive en el servidor de producción, fuera de este repo — ver <a href="./ARQUITECTURA.md">ARQUITECTURA.md</a>, sección 4 ("Instalación del servidor").</p>
+
+      <details class="qa">
+        <summary>Ya se agregó el header y el chequeo de rol en el mock. ¿Qué falta para que esto sea seguridad real y no solo una simulación más completa?</summary>
+        <div class="answer">Que el <strong>backend de producción</strong> (fuera de este repo) haga exactamente esta misma verificación: leer el token, resolver el usuario contra la base de datos real (no un array en memoria) y rechazar la mutation si el rol no alcanza. El mock ahora demuestra el patrón correcto, pero un mock nunca es la barrera real — solo evita que te acostumbres a que no exista ninguna.</div>
+      </details>
+    </section>
+
+    <!-- 6. TYPESCRIPT -->
+    <section id="typescript">
+      <h2><span class="num">6</span> TypeScript: cómo está aplicado</h2>
+      <p class="lede"><code>tsconfig.app.json</code> tiene <code>"strict": true</code>, más algunas opciones menos comunes que vale la pena entender porque explican patrones que vas a ver en todo el código.</p>
+
+      <table>
+        <tr><th>Opción</th><th>Qué obliga</th></tr>
+        <tr><td><code>strict: true</code></td><td>No <code>any</code> implícito, null-checks estrictos, etc.</td></tr>
+        <tr><td><code>verbatimModuleSyntax: true</code></td><td>Los imports que son solo tipos <strong>tienen</strong> que escribirse <code>import type</code>, si no, error de compilación</td></tr>
+        <tr><td><code>erasableSyntaxOnly: true</code></td><td>Prohíbe sintaxis de TS que genera código en runtime (enums con valores, namespaces, parameter properties) — todo tiene que poder "borrarse" al compilar a JS</td></tr>
+        <tr><td><code>noUnusedLocals</code> / <code>noUnusedParameters</code></td><td>Variable o parámetro sin usar = error, no warning</td></tr>
+        <tr><td><code>paths: {"@/*": ["./src/*"]}</code></td><td>Import absoluto desde cualquier profundidad: <code>@/lib/utils</code> en vez de <code>../../../lib/utils</code></td></tr>
+      </table>
+
+      <h3><code>import type</code> en todos lados</h3>
+      <span class="file-tag">src/hooks/useAuth.ts</span>
+      <pre><code>import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import type { AuthUser, UserRole } from "@/lib/types";</code></pre>
+      <p>Consecuencia directa de <code>erasableSyntaxOnly</code>: como no se permiten los <code>enum</code> de TS (generan un objeto en runtime), el repo usa <strong>uniones de literales de string</strong> en su lugar:</p>
+      <pre><code>export type TicketStatus = "pending" | "in_progress" | "in_resolution" | "resolved";
+export type EquipmentStatus = "available" | "in_use" | "in_repair" | "retired";</code></pre>
+
+      <h3>Uniones discriminadas</h3>
+      <span class="file-tag">src/lib/types.ts</span>
+      <p><code>Product</code> y <code>Component</code> comparten un campo <code>type</code> que actúa de discriminante, permitiendo un tipo combinado:</p>
+      <pre><code>export interface Product { id: string; type: "product"; /* ... */ }
+export interface Component { id: string; type: "component"; /* ... */ }
+export type Equipment = Product | Component;</code></pre>
+      <p>Con esto, <code>if (equipment.type === "product")</code> hace que TypeScript "estreche" (<em>narrow</em>) el tipo dentro del <code>if</code> sin necesidad de castear nada.</p>
+
+      <h3>Genéricos en las dos piezas centrales</h3>
+      <pre><code>function gql&lt;T&gt;(query: string, variables?: Record&lt;string, unknown&gt;): Promise&lt;T&gt;
+function useAsync&lt;T&gt;(fn: () =&gt; Promise&lt;T&gt;, deps: unknown[]): { data: T | null; ... }
+
+// uso: el tipo de retorno se infiere en el call site
+useAsync&lt;{ tickets: Ticket[] }&gt;(() =&gt; gql(TICKETS_QUERY, vars), [deps]);</code></pre>
+
+      <div class="callout warn">
+        <div class="title">Un patrón declarado pero no adoptado</div>
+        <code>src/lib/types.ts:147</code> define <code>type Result&lt;T, E = Error&gt; = { ok: true; value: T } | { ok: false; error: E }</code> — el típico "Result type" para manejar errores como valores en vez de <code>try/catch</code>. Pero no se usa en ningún otro archivo del repo: todo el manejo de errores real pasa por <code>throw</code> + <code>.catch()</code> (ver <code>useAsync</code>, sección 4). Es un tipo aspiracional, no una convención vigente — si lo adoptás, hacelo consistente en todo el flujo de datos, no en un solo componente.
+      </div>
+
+      <details class="qa">
+        <summary>¿Por qué no hay ningún <code>enum</code> en <code>types.ts</code>?</summary>
+        <div class="answer"><code>erasableSyntaxOnly</code> en <code>tsconfig.app.json</code> lo prohíbe directamente (no compila). Las uniones de string literales cumplen el mismo rol y desaparecen por completo al transpilar — no dejan rastro en el JS final.</div>
+      </details>
+    </section>
+
+    <!-- 7. DEPENDENCIAS -->
+    <section id="dependencias">
+      <h2><span class="num">7</span> Dependencias y por qué existen</h2>
+      <p class="lede">Filosofía general del repo: pocas dependencias, y las que hay reemplazan una categoría completa de código que no quieren escribir a mano (accesibilidad, animaciones, mocks de red).</p>
+
+      <table>
+        <tr><th>Paquete</th><th>Por qué está</th></tr>
+        <tr><td><code>react</code> / <code>react-dom</code> 19.2</td><td>UI. La 19 trae el compiler de React (ver <code>babel-plugin-react-compiler</code> abajo)</td></tr>
+        <tr><td><code>react-router-dom</code> 7</td><td>Ruteo + <code>ProtectedRoute</code> se apoya en su <code>&lt;Navigate&gt;</code> y <code>useLocation</code></td></tr>
+        <tr><td><code>@radix-ui/*</code> (8 paquetes)</td><td>Primitivas accesibles sin estilos (dialog, select, tabs, tooltip...). Evita reimplementar focus-trap, aria-* y navegación por teclado a mano</td></tr>
+        <tr><td><code>tailwindcss</code> + <code>@tailwindcss/vite</code></td><td>CSS utilitario; el plugin de Vite lo integra sin PostCSS config manual</td></tr>
+        <tr><td><code>class-variance-authority</code></td><td>Define variantes de estilo por componente (ej. <code>Button</code> con variant <code>primary</code>/<code>ghost</code>/<code>danger</code>) sin if/else de clases</td></tr>
+        <tr><td><code>clsx</code> + <code>tailwind-merge</code></td><td>Combinar clases condicionales sin que Tailwind duplique/pisee reglas en conflicto (ver <code>cn()</code> en <code>utils.ts</code>)</td></tr>
+        <tr><td><code>motion</code> (Framer Motion v12)</td><td>Animaciones de transición de página y diálogos</td></tr>
+        <tr><td><code>recharts</code></td><td>Gráficos de torta/barras del dashboard</td></tr>
+        <tr><td><code>lucide-react</code></td><td>Set de íconos consistente</td></tr>
+        <tr><td><code>msw</code></td><td>Simula el backend GraphQL en desarrollo interceptando <code>fetch</code> (sección 3 y 4)</td></tr>
+        <tr><td><code>react-qr-code</code> + <code>jsqr</code></td><td>Generar el QR de un equipo (inventario) y leerlo con la cámara (escaneo en tickets)</td></tr>
+        <tr><td><code>web-haptics</code></td><td>Vibración táctil en mobile — el propio <code>useHaptics.ts</code> anota que Apple lo deprecó, queda como fallback</td></tr>
+      </table>
+
+      <h3>Dev dependencies destacadas</h3>
+      <table>
+        <tr><th>Paquete</th><th>Por qué está</th></tr>
+        <tr><td><code>oxlint</code></td><td>Linter en Rust — reemplaza ESLint, mucho más rápido</td></tr>
+        <tr><td><code>babel-plugin-react-compiler</code></td><td>El compiler oficial de React 19: memoiza automáticamente sin que escribas <code>useMemo</code>/<code>useCallback</code> a mano en cada componente</td></tr>
+        <tr><td><code>@rolldown/plugin-babel</code></td><td>Vite 8 usa Rolldown (bundler en Rust) por debajo; este plugin permite que Babel (necesario para el React Compiler) siga funcionando ahí</td></tr>
+        <tr><td><code>react-doctor</code></td><td>CLI de auditoría (lint + accesibilidad + bundle size) — corre con <code>bun run doctor</code></td></tr>
+      </table>
+
+      <div class="callout info">
+        <div class="title">Lo que <strong>no</strong> hay, a propósito</div>
+        Sin cliente GraphQL (Apollo/urql), sin librería de formularios, sin manejo de estado global (Redux/Zustand), sin datepicker. Todo eso está resuelto con <code>fetch</code> + <code>useState</code> + Context — menos dependencias, más código explícito a la vista.
+      </div>
+
+      <details class="qa">
+        <summary>¿Por qué <code>tailwind-merge</code> además de <code>clsx</code>?</summary>
+        <div class="answer"><code>clsx</code> solo concatena clases condicionalmente; no sabe que <code>p-2</code> y <code>p-4</code> son la misma propiedad CSS. Si un componente base tiene <code>p-2</code> y el caller pasa <code>p-4</code> para sobreescribir, <code>clsx</code> deja las dos y gana la que venga después en el CSS final (frágil). <code>twMerge</code> entiende Tailwind y descarta la que corresponde.</div>
+      </details>
+    </section>
+
+    <footer>
+      Generado a partir del código real del repo (verificado archivo por archivo, no inferido). Para la infraestructura de producción (servidor, MariaDB, Nginx, firewall) ver <a href="./ARQUITECTURA.md">docs/ARQUITECTURA.md</a>.
+    </footer>
+  </main>
+</div>
+
+<script>
+  // Progress bar
+  const bar = document.getElementById("progress-bar");
+  window.addEventListener("scroll", () => {
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    bar.style.width = scrolled + "%";
+  });
+
+  // Active section highlight in sidebar
+  const links = document.querySelectorAll("nav.sidebar a.nav-link");
+  const sections = Array.from(links).map(l => document.querySelector(l.getAttribute("href")));
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = "#" + entry.target.id;
+        links.forEach(l => l.classList.toggle("active", l.getAttribute("href") === id));
+      }
+    });
+  }, { rootMargin: "-20% 0px -70% 0px" });
+  sections.forEach(s => s && observer.observe(s));
+</script>
+</body>
+</html>
