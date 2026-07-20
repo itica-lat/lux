@@ -279,28 +279,25 @@ html.dark[data-contrast="high"] {
 }
 
 @utility glass-topbar {
-  background-color: color-mix(in srgb, var(--background) 80%, transparent);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border);
 }
 
 @utility glass-topbar-light {
-  background-color: color-mix(in srgb, var(--background) 80%, transparent);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
 }
 
 @utility glass-topbar-dark {
-  background-color: color-mix(in srgb, var(--background) 80%, transparent);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
 }
 
 @utility glass-light {
-  background-color: color-mix(in srgb, var(--card) 40%, transparent);
+
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--border);
