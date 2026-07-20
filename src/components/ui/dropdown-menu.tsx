@@ -112,14 +112,14 @@ function DropdownMenuSubTrigger({
   return (
     <DropdownMenuPrimitive.SubTrigger
       className={cn(
-        "flex cursor-pointer select-none items-center rounded-lg px-2 py-1.5 text-sm text-foreground outline-none gap-2 hover:bg-muted",
+        "flex cursor-pointer select-none items-center rounded-lg pl-2 pr-3 py-1.5 text-sm text-foreground outline-none gap-2 hover:bg-muted",
         inset && "pl-8",
         className,
       )}
       {...props}
     >
       {children}
-      <ChevronRight className="ml-auto h-4 w-4" />
+      <ChevronRight className="ml-auto h-4 w-4 shrink-0" />
     </DropdownMenuPrimitive.SubTrigger>
   );
 }

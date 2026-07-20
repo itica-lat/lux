@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useCallback, type ReactNode } from
 import { createElement } from "react";
 import type { AuthUser, UserRole } from "@/lib/types";
 import { gql } from "@/lib/utils";
+import { AUTH_STORAGE_KEY } from "@/lib/constants";
 
 interface AuthContextType {
   user: AuthUser | null;
@@ -34,11 +35,9 @@ interface LoginData {
   login: AuthUser;
 }
 
-const STORAGE_KEY = "lux_auth";
-
 function loadStoredUser(): AuthUser | null {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(AUTH_STORAGE_KEY);
     if (!raw) return null;
     return JSON.parse(raw) as AuthUser;
   } catch {
@@ -56,7 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const data = await gql<LoginData>(LOGIN_QUERY, { dni, password });
       const authUser = data.login;
       setUser(authUser);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(authUser));
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(authUser));
     } finally {
       setIsLoading(false);
     }
@@ -64,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(() => {
     setUser(null);
-    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(AUTH_STORAGE_KEY);
   }, []); // Logica de logout
 
   const hasRole = useCallback(
