@@ -95,6 +95,15 @@ El schema GraphQL (ver `src/mocks/schema.ts`) expone:
 
 Todas las mutaciones de eliminacion son **soft delete** (marcan `deletedAt` sin borrar el registro fisicamente).
 
+### Archivos SQL (`docs/sql/`)
+
+| Archivo | Contenido |
+|---------|-----------|
+| `proyecto.sql` | Schema real de la base `lux` (DDL de las 17 tablas + datos de ejemplo) descrito en este documento |
+| `queries.sql` | **No es parte del sistema.** Resolucion de un ejercicio de practica de SQL (`docs/18+07+Actividad+SQL.pdf`) adaptado al schema de `lux` |
+
+Ver `docs/CAMBIOS.md` para el detalle de las correcciones aplicadas a ambos archivos.
+
 ---
 
 ## 4. Instalacion del servidor
