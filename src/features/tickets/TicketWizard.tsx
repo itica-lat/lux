@@ -127,7 +127,7 @@ export function TicketWizard({ ticket, onComplete, canComplete }: TicketWizardPr
         </ol>
       </nav>
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
@@ -135,7 +135,7 @@ export function TicketWizard({ ticket, onComplete, canComplete }: TicketWizardPr
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -12 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="flex-1"
+            className="flex-1 min-w-0"
           >
             {renderStep()}
           </motion.div>
